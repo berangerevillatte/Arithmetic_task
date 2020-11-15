@@ -1,32 +1,54 @@
-AssertOpenGL
+%code de VILLATTE, Berangere et BIGRAS, Charlotte
 
-screens=Screen('screens'); %repÃ¨re les Ã©crans
-screenNumber=max(screens); %cherche Ã©cran secondaire
+
+AssertOpenGL %version compatible de psychtoolbox avec GL
+
+screens=Screen('screens'); %repere les ecrans
+screenNumber=max(screens); %cherche ecran secondaire
 Screen('Preference', 'SkipSyncTests', 1); 
 
-%Pour s'adapter Ã  tous les Ã©crans
-[width_in_mm, height_in_mm]=Screen('DisplaySize', screenNumber);
-resolution= Screen('Resolution', screenNumber);
-pixel_in_mm = width_in_mm/resolution.width;
-hz=Screen('FrameRate', screenNumber);
+%Pour s'adapter a  tous les ecrans
+rect = Screen(screenNumber,'Rect');
+hz=Screen('FrameRate', screens); %creer une frequence d'image
 
-% ouvre l'Ã©cran. Mettre la couleur en Red Green Blue [RGB]
+% Display instructions
 couleur_ecran=[49 140 231];%Ecran bleu 
-[windowPtr, rect]=Screen('OpenWindow',screenNumber, couleur_ecran); 
-%Determiner dimension et position du rectangle
-fromH=resolution.width/4;
-fromV=resolution.height/4;
-toH=fromH*3;
-toV=fromV*3;
-%Dessiner un rectangle coin haut gauche
-Screen('FillRect', windowPtr, [0 255 0], [fromH, fromV, toH, toV]);
-%fonction sur Ã©cran secondaire mais pas principal mÃªme en changeant l.4 
-%avec screenNumber=min(screens);
-quote{1}='"Vous allez devoir rÃ©pondre Ã  plusieurs Ã©preuves de calcul mental en 10 secondes maximum"'
-[newX, newY, textHeight]=Screen('DrawText', windowPtr, quote{1}, fromH+10,fromV+10, [0 0 0]);
-Screen('Flip', windowPtr);
+[w, rect]=Screen('OpenWindow',screenNumber, couleur_ecran); %ouvre l'ecran
 
-%%laisser Ã  la fin
+% Dessiner un rectangle blanc au centre
+% Determiner dimension et position du rectangle
+x1=rect(3)/4;
+y1=rect(4)/4;
+x2=x1*3;
+y2=y1*3;
+% Dessiner le rectangle blanc au centre
+Screen('FillRect', w, [255 255 255], [x1, y1, x2, y2]);
 
+%Afficher un welcome text
+welcometext = ['Vous aller devoir effectuer une tâche arythmétique :', char(10), char(10),'Prenez le chiffre 1022 et soustrayez 13, puis soustrayez encore 13, et ainsi de suite.', char(10), char(10),'A chaque fois, vous n''aurez que 7.5 secondes pour repondre.',char(10),'Il est donc important que vous soyez rapide et précis, puisque s''il y a une erreur, vous devrez recommencer à 1022.'];
+DrawFormattedText(w, welcometext,'center','center',[0 0 0]);
+
+% WaitSecs(1);
+% secs(1)=GetSecs;
+% disp('A')
+% [secs(2),keyCode,deltasec]=KbWait([-1],[],secs(1)+10);%on a 10 secondes apres start pour appuyer sur une touche
+% delay=secs(2)-secs(1)
+
+
+% %Definir le centre
+% xCenter = round(rect(3)/2);
+% yCenter = round(rect(4)/2);
+% % [normBoundsRect, offsetBoundsRect]= Screen('TextBounds', w, welcometext, xCenter, yCenter);
+% % offsetX = (offsetBoundsRect(3)-offsetBoundsRect(1))/2;
+% % offsetY = (offsetBoundsRect(4)-offsetBoundsRect(2))/2;
+% % Screen('DrawText', w, welcometext, xCenter-offsetX, yCenter-offsetY);
+
+Screen('Flip', w);
 WaitSecs(4);
-sca;
+clear Screen screens
+sca
+% % Open or close a window or texture, suite
+% textureIndex=Screen('MakeTexture', WindowIndex, imageMatrix [, optimizeForDrawAngle=0] [, specialFlags=0] [, floatprecision=0] [, textureOrientation=0] [, textureShader=0]);
+ 
+% Instruction_1= 'Vous aller devoir effectuer une tâche arythmétique : \nPrenez le chiffre 1022 et soustrayez 13, puis soustrayez encore 13, et ainsi de suite. A chaque fois, vous n''aurez que 7.5 secondes pour repondre. Il est donc important que vous soyez rapide et précis, puisque s?il y a une erreur, vous devrez recommencer à 1022.'
+% Instruction_2=
