@@ -25,15 +25,13 @@ y2=y1*3;
 Screen('FillRect', w, [255 255 255], [x1, y1, x2, y2]);
 
 %Afficher un welcome text
-welcometext = ['Vous aller devoir effectuer une tâche arythmétique :', char(10),...
-    char(10),'Prenez le chiffre 1022 et soustrayez 13, puis soustrayez encore 13, et ainsi de suite.', char(10), char(10),'A chaque fois, vous n''aurez que 7.5 secondes pour repondre.',char(10),'Il est donc important que vous soyez rapide et précis, puisque s''il y a une erreur, vous devrez recommencer à 1022.'],char(10),char(10),char(10),char(10),'Appuyez sur une touche pour continuer';
+welcometext = ['Vous aller devoir effectuer une tâche arythmétique :', char(10), char(10),'Prenez le chiffre 1022 et soustrayez 13, puis soustrayez encore 13, et ainsi de suite.', char(10), char(10),'A chaque fois, vous n''aurez que 7.5 secondes pour repondre.',char(10),'Il est donc important que vous soyez rapide et précis, puisque s''il y a une erreur, vous devrez recommencer à 1022.'];
 DrawFormattedText(w, welcometext,'center','center',[0 0 0]);
 
-% 
-% WaitSecs(1);
-% secs(1)=GetSecs;
-% [secs(2), keyCode, deltaSecs]=KbWait([],secs(1)+10);%on a 10 secondes apres start pour appuyer sur une touche
-% delay=secs(2)-secs(1)
+WaitSecs(1);
+secs(1)=GetSecs;
+[secs(2), keyCode, deltaSecs]=KbWait([],secs(1)+10);%on a 10 secondes apres start pour appuyer sur une touche
+delay=secs(2)-secs(1)
 
 
 % %Definir le centre
@@ -46,7 +44,7 @@ DrawFormattedText(w, welcometext,'center','center',[0 0 0]);
 
 Screen('Flip', w);
 WaitSecs(4);
-% clear Screen screens
+clear Screen screens
 sca
 % % Open or close a window or texture, suite
 % textureIndex=Screen('MakeTexture', WindowIndex, imageMatrix [, optimizeForDrawAngle=0] [, specialFlags=0] [, floatprecision=0] [, textureOrientation=0] [, textureShader=0]);
