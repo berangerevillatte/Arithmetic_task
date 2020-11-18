@@ -41,20 +41,4 @@ Screen('CloseAll')
 end
 
 
-%Essai boucle 
-msg1 = ['Bonne reponse']; %positive feedback
-msg2 = ['Mauvaise reponse. Veuillez recommencer du début.']; %negative feedback
-for i=1022:-13:-70;
-    part_resp=input([num2str(i) '-13 : ']);
-   if part_resp == i -13;
-        disp(msg1)
-   else
-        disp(msg2)
-        for i=1022:-13:-70;
-        part_resp=input([num2str(i) '-13 : ']);
-       if part_resp == i -13;
-        disp(msg1)
-       end
-       end
-    end
-end
+
