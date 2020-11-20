@@ -1,7 +1,7 @@
 %code de VILLATTE, Berangere et BIGRAS, Charlotte
 
 AssertOpenGL %version compatible de psychtoolbox avec GL
-KbName('UnifyKeyNames');
+% KbName('UnifyKeyNames');
 screens=Screen('screens'); %repere les ecrans
 screenNumber=max(screens); %cherche ecran secondaire
 Screen('Preference', 'SkipSyncTests', 1);  % put 1 if the sync test fails
@@ -32,7 +32,7 @@ welcometext = ['Vous aller devoir effectuer une tâche arythmétique :', char(10),
 %yCenter = round(rect(4)/2);
 
 %screen_Center = [rect(3), rect(4)]/2 
-DrawFormattedText(w, welcometext,'center','center',[0 0 0])
+DrawFormattedText(w, welcometext,'center','center',[0 0 0]);
 Screen('Flip', w);
 
 %This program waits for the user to press the return key
@@ -43,13 +43,15 @@ DrawFormattedText(w, welcometext2,'center','center',[0 0 0]);
 Screen('Flip', w);
 
 %This program waits for the user to press the return key
-[secs, keyCode, deltaSecs] = KbWait([], 2);
-
+[secs, keyCode, deltaSecs] = KbWait(-1,2);
 escapeKey=KbName('ESCAPE');
 [a, v, keyCode]=KbCheck;
 if any (keyCode(escapeKey));
     sca
 end
+
+WaitSecs(10);
+sca
 
 %% 
 %local functions
