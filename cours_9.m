@@ -113,11 +113,11 @@ quote{3}='"Poor kids are just as bright and just as talented as white kids"';
 
 
 [windowPtr,rect]=Screen('OpenWindow',screenNumber); 
-Screen(windowPtr,'TextFont', 'Comic-Sans'); % on veut changer la police du texte? 
-% Screen('TextSize', windowPtr, 100); % on veut changer la taille du texte? 
+% Screen(windowPtr,'TextFont', 'Comic-Sans'); % on veut changer la police du texte? 
+% % Screen('TextSize', windowPtr, 100); % on veut changer la taille du texte? 
 Screen('DrawText', windowPtr, auteur{which_quote}, 200, 300); % on veut rajouter du texte a une position specifique? 
-Screen('TextSize', windowPtr, 30);
-% Screen('TextColor', windowPtr, [100 0 150]) % on veut modifier la couleur? 
+% Screen('TextSize', windowPtr, 30);
+% % Screen('TextColor', windowPtr, [100 0 150]) % on veut modifier la couleur? 
 Screen('DrawText', windowPtr, quote{1}, 200, 200); % position is "x", "y" (in pixel position from left upper corner).
 Screen('Flip', windowPtr);
 
