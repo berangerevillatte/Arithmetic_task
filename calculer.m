@@ -1,192 +1,109 @@
-function calcul = calculer(position)
-%AssertOpenGL %version compatible de psychtoolbox avec GL
+%% Initilize screens
+%AssertOpenGL %compatible version of psychtoolbox with GL
 KbName('UnifyKeyNames');
 [keyIsDown, secs, keyCode, deltaSecs] = KbCheck;
 screens=Screen('screens'); %repere les ecrans
 screenNumber=max(screens); %cherche ecran secondaire
 Screen('Preference', 'SkipSyncTests', 1);  % put 1 if the sync test fails
 
-%Pour s'adapter a  tous les ecrans
+%To fit on every screen
 rect= Screen(screenNumber, 'Rect'); 
 resolution= Screen('Resolution', screenNumber);
 hz=Screen('FrameRate', screenNumber); %creer une frequence dimage
+
+%% Get subject name and run number (prompt to get the SubjectName & runNumber before the start of the experiment)
+subjectName = input('Enter participant code: ','s');
+if isempty(subjectName)
+  subjectName = 'trial';
+end
+runNumber = input('Enter the run Number: ','s');
+if isempty(runNumber)
+  runNumber = 'trial';
+end
+
+%% Display a grey screen
 couleur_ecran=[100 100 100];%Ecran gris 
 [w, rect]=Screen('OpenWindow',screenNumber, couleur_ecran); 
-Screen('TextSize', w,[50]);
-xCenter = round(rect(3)/2);
-yCenter = round(rect(4)/2);
+% xCenter = round(rect(3)/2);
+% yCenter = round(rect(4)/2);
 
-    % Creates stimulus
-array = 1009:-13:-70; %toutes les reponses possibles de 1009 a -70; vecteur de 84 elements
-
-for idx = 1:length(array);
-position = num2str(array(idx));
+%% Escape key
+% This program waits for the user to press the return key
+[secs, keyCode, deltaSecs] = KbWait(-1,2);
+Escape_key=KbName('Escape');
+[a, v, keyCode]=KbCheck;
+if any (keyCode(Escape_key));
+    sca
 end
+
+%% Display instructions
+welcometext = ['Vous aller devoir effectuer une tâche arythmétique :',...
+    char(10), char(10),'Prenez le chiffre 1022 et soustrayez 13, puis soustrayez encore 13, et ainsi de suite.', char(10), ...
+    char(10),'A chaque fois, vous n''aurez que 7.5 secondes pour repondre.'];
+welcometext2 = ['Il est donc important que vous soyez rapide et précis, puisque s''il y a une erreur, vous devrez recommencer à 1022.'];
+
+DrawFormattedText(w, sprintf(welcometext),'center','center',[0 0 0]);
+Screen('Flip', w);
+
+% This program waits for the user to press the return key
+[secs, keyCode, deltaSecs] = KbWait([], 2);
+
+DrawFormattedText(w, welcometext2,'center','center',[0 0 0]);
+Screen('Flip', w);
+
+%% force to exit
+% WaitSecs(5)
+% sca
+
+%% Creates stimulus
+% array = 1009:-13:-70; %toutes les reponses possibles de 1009 a -70; vecteur de 84 elements
+% 
+% for idx = 1:length(array);
+% position = num2str(array(idx));
+% end
+
+%% Calcul mental 
 
 output = [' ', string];
-participantreponse = GetEchoString(w, output, 'center', 'center', [0 0 0], [], [], [])
+part_resp = GetEchoString(w, output, 'center', 'center', [0 0 0], [], [], [])
 
-msg1 = ['Bonne reponse']; %positive feedback
-msg2 = ['Mauvaise reponse. Veuillez recommencer du début.']; %negative feedback
+pas = 13;
+duration_max = 7.5;
 
-if participantreponse == '1009'; 
-   
-    Screen('DrawText', w, msg1, 'center', 'center', [0 0 0],[],[],[]);
-else 
-    Screen('DrawText', w, msg2, 'center', 'center', [0 0 0],[],[],[]);
-end
-Screen('Flip', w);
-Screen('CloseAll')
-end
-
-
-%% Essai boucle
-% msg1 = ['Bonne reponse']; %positive feedback
-% msg2 = ['Mauvaise reponse. Veuillez recommencer du debut.']; %negative feedback
-% 
-% for i=1022:-13:-70;
-%     part_resp=input([num2str(i) '-13 : ']);
-%    if part_resp == i -13;
-%         disp(msg1)
-%         figure, imshow(cor); %ok
-%    else
-%         disp(msg2)
-%         imshow(incor); %ok
-%         for i=1022:-13:-70;
-%             part_resp=input([num2str(i) '-13 : ']);
-%            if part_resp == i -13; 
-%                 disp(msg1)
-%                 imshow(cor);
-%             else
-%                 disp(msg2)
-%                 imshow(incor); %ok
-%                 for i=1022:-13:-70;
-%                     part_resp=input([num2str(i) '-13 : ']);
-%                    if part_resp == i -13;
-%                         disp(msg1)
-%                         imshow(cor);
-%                     else
-%                         disp(msg2)
-%                         imshow(incor);
-%                    end 
-%                 end
-%            end
-%         end
-%    end
-% end
-
-%% autre essai (comment revenir a 1022?)
-% msg1 = ['Bonne reponse']; %positive feedback
-% msg2 = ['Mauvaise reponse. Veuillez recommencer du debut.']; %negative feedback
-% 
-% depart=1022;
-% pas=-13;
-% fin=-70;
-% i=depart:pas:fin;
-% part_resp=input('your answer :');
-% 
-% accuracy(1) = part_resp == i-13;
-% accuracy(0) = part_resp >= i-13 | part_resp < i-13;
-% 
-% i=depart:pas:fin;
-% 
-% while  true 
-%     accuracy = 1
-% %     if part_resp == i-13;
-%     disp(msg1) 
-%     if accuracy = 0 
-%         disp(msg2)
-%     end
-% end
-% 
-% %% "rih
-% msg1 = ['Bonne reponse']; %positive feedback
-% msg2 = ['Mauvaise reponse. Veuillez recommencer du debut.']; %negative feedback
-% 
-% 
-% depart = 1022;
-% pas = -13;
-% fin = -70;
-% i=depart:pas:fin;
-% 
-% 
-% % % output = [' ', string];
-% % % participantreponse = GetEchoString(w, output, 'center', 'center', [0 0 0], [], [], [])
-% % %  answer = str2num(participantreponse)
-%  
-% part_resp = input('1022-13')
-%  accuracy(1) = part_resp == i-13;
-%  accuracy(0) = part_resp >= i-13 | part_resp < i-13;
-% 
-% 
-%  while true 
-%     if accuracy = 1
-%         disp(msg1) ;
-%     elseif accuracy = 0
-%         disp(msg2);
-%     end
-% end
-% 
-% 
-% 
-% clear all
-% clc
-% msg1 = ['Bonne reponse']; %positive feedback
-% msg2 = ['Mauvaise reponse. Veuillez recommencer du debut.']; %negative feedback
-%  
-% depart = 1022;
-% pas = -13;
-% fin = -70;
-% bonne_rep=depart-13;
-% part_resp = input([num2str(depart) '-13 :']);
-% 
-% depart;
-% 
-% while true
-%     part_resp = input([num2str(depart) '-13 :']);
-% 
-% i = depart:pas:fin;
-% position = 1:length(i);
-% % bonne_rep = i-13;
-% % end
-% 
-% accuracy(position) = bonne_rep == part_resp;
-% 
-%       
-% %     for i = depart:pas:fin;
-% %     position = 1:length(i);     
-%     % answer = str2num(part_resp);
-%     %  accuracy(i) = part_resp == i(bonne_rep);
-% %  accuracy = part_resp >= i(bonne_rep) | part_resp < i(bonne_rep);
-%          if accuracy(position) == 1
-%                 disp(msg1)
-%                 depart=depart-13;
-%                 part_resp = input([num2str(depart) '-13 :']);
-%          else
-%                 disp(msg2)
-%                 depart;
-%  end
-% end
-
-
-%% Selon conseil Simon, revenir à 0 dans while loop
-compteur = 1022;
-part_resp = input('1022-13 :');
-% correct = part_resp == compteur-13;
-% incorrect = part_resp >= compteur-13 | part_resp < compteur-13;
+% part_resp = input('1022-13 :');
 msg1 = ['bonne reponse'];
 msg2 = ['mauvaise reponse, veuillez recommencer au debut.'];
-
+msg3 = ['time out! veuillez recommencer au debut.'];
+ 
 compteur = 1022;
+tic
 while true 
-    if part_resp == compteur-13
-        compteur=compteur-13;
+    
+    b = toc;
+    
+    if part_resp == compteur-13 && (duration_max-b) > 0
+       compteur=compteur-13;
+       tic
         disp(msg1)
+        part_resp = input([num2str(compteur) '-13 :']);      
+        
+     elseif (duration_max-b) == 0 || (duration_max-b) < 0
+         
+        disp(msg3)
+        compteur = 1022;
+        tic
+        part_resp = input([num2str(compteur) '-13 :']);   
+        
+    elseif isempty(part_resp)
+        part_resp = timeinput(duration_max,'1022');
+        compteur = 1022;
+        tic
+        disp(msg2)
         part_resp = input([num2str(compteur) '-13 :']);
-elseif part_resp >= compteur-13 || part_resp < compteur-13;
-    disp(msg2)
-    compteur = 1022;
-    part_resp = input([num2str(compteur) '-13 :']);
-end
-end
+    else 
+        compteur = 1022;
+        tic
+        disp(msg2)
+        part_resp = input([num2str(compteur) '-13 :']);
+    end
 end
