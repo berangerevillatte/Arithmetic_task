@@ -18,89 +18,114 @@ xCenter = round(rect(3)/2);
 yCenter = round(rect(4)/2);
 
     % Creates stimulus
-array = 1009:-13:-70; %toutes les reponses possibles de 1009 a -70; vecteur de 84 elements
 
-for idx = 1:length(array);
-position = num2str(array(idx));
-end
-
-output = [' ', string];
-participantreponse = GetEchoString(w, output, 'center', 'center', [0 0 0], [], [], [])
-
-msg1 = ['Bonne reponse']; %positive feedback
-msg2 = ['Mauvaise reponse. Veuillez recommencer du début.']; %negative feedback
-
-if participantreponse == '1009'; 
-   
-    Screen('DrawText', w, msg1, 'center', 'center', [0 0 0],[],[],[]);
-else 
-    Screen('DrawText', w, msg2, 'center', 'center', [0 0 0],[],[],[]);
-end
 Screen('Flip', w);
-Screen('CloseAll')
-end
-
-
-%% Essai boucle
-msg1 = ['Bonne reponse']; %positive feedback
-msg2 = ['Mauvaise reponse. Veuillez recommencer du debut.']; %negative feedback
-cor = imread('correct.png');
-incor = imread('incorrect.png');
-
-for i=1022:-13:-70;
-    part_resp=input([num2str(i) '-13 : ']);
-   if part_resp == i -13;
-        disp(msg1)
-        figure, imshow(cor); %ok
-   else
-        disp(msg2)
-        imshow(incor); %ok
-        for i=1022:-13:-70;
-            part_resp=input([num2str(i) '-13 : ']);
-           if part_resp == i -13; 
-                disp(msg1)
-                imshow(cor);
-            else
-                disp(msg2)
-                imshow(incor); %ok
-                for i=1022:-13:-70;
-                    part_resp=input([num2str(i) '-13 : ']);
-                   if part_resp == i -13;
-                        disp(msg1)
-                        imshow(cor);
-                    else
-                        disp(msg2)
-                        imshow(incor);
-                   end 
-                end
-           end
-        end
-   end
-end
 
 
 
-clear all
-clc
+% %% 
+% Essai boucle
+% msg1 = ['Bonne reponse']; %positive feedback
+% msg2 = ['Mauvaise reponse. Veuillez recommencer du debut.']; %negative feedback
+% cor = imread('correct.png');
+% incor = imread('incorrect.png');
+
+% for i=1022:-13:-70;
+%     part_resp=input([num2str(i) '-13 : ']);
+%    if part_resp == i -13;
+%         disp(msg1)
+%         figure, imshow(cor); %ok
+%    else
+%         disp(msg2)
+%         imshow(incor); %ok
+%         for i=1022:-13:-70;
+%             part_resp=input([num2str(i) '-13 : ']);
+%            if part_resp == i -13; 
+%                 disp(msg1)
+%                 imshow(cor);
+%             else
+%                 disp(msg2)
+%                 imshow(incor); %ok
+%                 for i=1022:-13:-70;
+%                     part_resp=input([num2str(i) '-13 : ']);
+%                    if part_resp == i -13;
+%                         disp(msg1)
+%                         imshow(cor);
+%                     else
+%                         disp(msg2)
+%                         imshow(incor);
+%                    end 
+%                 end
+%            end
+%         end
+%    end
+% end
+
 %% autre essai (comment revenir a 1022?)
-msg1 = ['Bonne reponse']; %positive feedback
-msg2 = ['Mauvaise reponse. Veuillez recommencer du debut.']; %negative feedback
-cor = imread('correct.png');
-incor = imread('incorrect.png');
+    
+clear all
 
-part_resp = true;
-for i=1022:-13:-70;
-    part_resp=input([num2str(i) '-13 : ']);
+clc
+
+msg1 = ['Bonne reponse']; %positive feedback
+
+msg2 = ['Mauvaise reponse. Veuillez recommencer du debut.']; %negative feedback
+
  
-    if part_resp == i-13;
-        disp(msg1) 
-        figure, imshow(cor);
-    elseif part_resp >= i-13 | part_resp < i-13;
-        disp(msg2)
-        figure, imshow(incor);
-        part_resp = true;
-    end
+
+depart = 1022;
+
+pas = -13;
+
+fin = -70; 
+
+while true   
+
+    for i = depart:pas:fin;
+
+    position = 1:85;     
+
+    % answer = str2num(part_resp);
+
+    part_resp = input([num2str(i) '-13 :']);
+
+    bonne_rep = i-13;
+
+    accuracy(position) = bonne_rep == part_resp;
+
+  
+
+%  accuracy(i) = part_resp == i(bonne_rep);
+
+%  accuracy = part_resp >= i(bonne_rep) | part_resp < i(bonne_rep);
+
+         if accuracy(position) == 1
+
+                disp(msg1)                
+
+         else
+
+                disp(msg2)             
+
+ end
+
 end
+
+end
+end
+
+% output = [' ', string];
+% participantreponse = GetEchoString(w, output, 'center', 'center', [0 0 0], [], [], [])
+% answer = str2num(participantreponse)
+% 
+% bonnereponse = 1009
+% 
+% bonnereponse == answer
+% 
+% answer = str2num('1009'); bonnereponse = 1009;
+% accuracy(1) = bonnereponse == answer
+% answer 
+% 
 
 
 
