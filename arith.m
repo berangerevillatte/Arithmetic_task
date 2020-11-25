@@ -77,53 +77,59 @@ part_resp = str2num(GetEchoString2(w, msg, xCenter, yCenter, [0 0 0],[], 1, []))
 %chrono(w, duration_max, 300, 400, [255 0 0], 300);
 
 % part_resp = input('1022-13 :');
-msg1 = ['bonne reponse'];
-msg2 = ['mauvaise reponse, veuillez recommencer du debut.'];
-msg3 = ['Le temps est ecoule! veuillez recommencer du debut.'];
- 
+message{1} = ['Bonne reponse'];
+message{2} = ['Mauvaise reponse, veuillez recommencer du debut.'];
+message{3} = ['Le temps est ecoule! veuillez recommencer du debut.'];
+
 compteur = 1022;
-tic
+
 start=GetSecs;
+tic
 
-while true 
-    b = toc;  
-    output = [msg1, part_resp];% enleve msg au debut
-Screen('DrawText', w, output, xCenter, yCenter, [0 0 0],[],[],[]);
-Screen('Flip', w, 0, 1);
+while true
+ b = toc;
 
-    if part_resp == compteur-13 & (duration_max-b) > 0 %bonne reponse
+
+%Screen('Flip', w, 0, 1);
+
+    if part_resp == compteur-13 %& (duration_max-b) > 0 %bonne reponse
        compteur=compteur-13;
+       tic;
+       pot = 1;
+       part_resp = input([num2str(compteur) '-13 :']);  
+       retour = message{pot};
+       Screen('TextSize', w, 50);
+       Screen('DrawText', w, retour,xCenter, yCenter, [0 0 0],[],[],[]);
+       Screen('Flip', w, [], []);
+       WaitSecs(1);
+       part_resp = str2num(GetEchoString2(w, msg, xCenter, yCenter, [0 0 0],[], 1, []));
        
-       tic
-      disp(msg1)
-      part_resp = input([num2str(compteur) '-13 :']);      
 
-    elseif (duration_max-b) == 0 || (duration_max-b) < 0 %temps ecoule
-          continue
-   
-          compteur = 1022;
-        tic
-          disp(msg3)
-          part_resp = input([num2str(compteur) '-13 :']);  
-   
-      
-%     elseif isempty(part_resp) %mauvaise reponse
-%         part_resp = timeinput(duration_max,'1022');
-%         compteur = 1022;
-%         tic
-%         disp(msg2)
-%         part_resp = input([num2str(compteur) '-13 :']);
-
+    elseif (duration_max-b) == 0 %|| (duration_max-b) < 0 %temps ecoule
+        compteur = 1022;
+        tic;
+        pot = 3;
+        retour = message{pot}
+        part_resp = input([num2str(compteur) '-13 :']); 
+        Screen('TextSize', w, 50);
+        Screen('DrawText', w, retour,xCenter, yCenter, [0 0 0],[],[],[]);
+        Screen('Flip', w, [], []);
+        WaitSecs(1);
+        part_resp = str2num(GetEchoString2(w, msg, xCenter, yCenter, [0 0 0],[], 1, []));
+           
     else 
         compteur = 1022;
-        tic
-        disp(msg2)
-       part_resp = input([num2str(compteur) '-13 :']);
+        tic;
+        pot = 2;
+        retour = message{pot}
+        part_resp = input([num2str(compteur) '-13 :']);
+        Screen('TextSize', w, 50);
+        Screen('DrawText', w, retour,xCenter, yCenter, [0 0 0],[],[],[]);
+        Screen('Flip', w, [], []);
+        WaitSecs(1);
+        part_resp = str2num(GetEchoString2(w, msg, xCenter, yCenter, [0 0 0],[], 1, []));
 
-end
-
-            
-
+    end
 
 end
 
