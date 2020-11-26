@@ -32,6 +32,7 @@ function string = GetEchoString2(windowPtr, msg, x, y, textColor, bgColor, useKb
 % 03/20/08  tsh       Added FlushEvents at the start and made bgColor and
 %                     textcolor optional
 % 10/22/10  mk        Optionally allow to use KbGetChar for keyboard input.
+Screen('Preference','TextRenderer',0)
 
 if nargin < 7
     useKbCheck = [];
@@ -65,7 +66,7 @@ end
  
 
 % Write the message
-DrawFormattedText(windowPtr,msg, 'center', 'center');
+DrawFormattedText(windowPtr,msg, xCenter, yCenter+10,);
 Screen('Flip', windowPtr, [], []);
 
  
@@ -101,6 +102,6 @@ while true
  
 
      output = [' ', string];
-     DrawFormattedText(windowPtr,output, 'center', 'center');
+     DrawFormattedText(windowPtr,output, xCenter, yCenter-50,);
      Screen('Flip', windowPtr, [], []);
 end

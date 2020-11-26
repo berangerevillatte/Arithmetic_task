@@ -30,13 +30,8 @@ hz=Screen('FrameRate', screenNumber);
 % possible que vous soyez oblige d'ajouter la ligne suivante:
 Screen('Preference', 'SkipSyncTests', 1);    % put 1 if the sync test fails
 
-[windowPtr,rect]=Screen('OpenWindow', screenNumber);
-
-% Screen('CloseAll');
-sca
-
 [windowPtr,rect]=Screen('OpenWindow',screenNumber, [0 255 0]); % ouvre l'écran. Mettre la couleur en Red Green Blue [RGB]
-WaitSecs(3) % on attend 3 secondes
+% WaitSecs(3) % on attend 3 secondes
 sca         % on ferme la "screen window"
 
 
@@ -262,7 +257,6 @@ screenNumber=max(screens); % va toujours chercher l'ecran secondaire
 old_xCoor = 0;% commence a zero
 old_yCoor = 0;
 buttons = 0;
-
 
 start = GetSecs;
 while sum(buttons)==0

@@ -90,7 +90,7 @@ elseif (duration_max-b) == 0 %|| (duration_max-b) < 0 %temps ecoule
     Screen('Flip', windowPtr, [], []);
     WaitSecs(1);
     part_resp = str2num(GetEchoString2(windowPtr, msg, xCenter, yCenter, [0 0 0],[], 1, []));
-
+hhh
 elseif any (keyCode(escapeKey));
     sca
 else 
