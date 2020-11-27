@@ -61,13 +61,11 @@ Screen('Flip', w);
 % for idx = 1:length(array);
 % position = num2str(array(idx));
 % end
-
-%% Calcul mental 
-
-
-% [string,terminatorChar] = GetEchoString(window,msg,x,y,[textColor],[bgColor],[useKbCheck=0],[deviceIndex],[untilTime=inf],[KbCheck args...]);
 part_resp = str2num(GetEchoString2(w, msg, xCenter, yCenter, [0 0 0],[], 1, []));
 
+%% Calcul mental
+% [string,terminatorChar] = GetEchoString(window,msg,x,y,[textColor],[bgColor],[useKbCheck=0],[deviceIndex],[untilTime=inf],[KbCheck args...]);
+part_resp = input('1022 - 13 :');
 pas = 13;
 duration_max = 7.5;
 
@@ -82,7 +80,7 @@ while true
     
     b = toc;
     
-    if part_resp == compteur-13 && (duration_max-b) > 0
+    if part_resp == compteur-13 & (duration_max-b) > 0
        compteur=compteur-13;
        tic
         disp(msg1)

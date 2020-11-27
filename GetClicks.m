@@ -22,3 +22,5 @@ if clicks == 1
     DrawFormattedText(windowPtr,msg,'center', 'center');
     Screen('flip',windowPtr);
 end
+
+sca
