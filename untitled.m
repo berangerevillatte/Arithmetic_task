@@ -6,7 +6,7 @@ KbName('UnifyKeyNames');
 screens=Screen('screens'); %repere les ecrans
 screenNumber=max(screens); %cherche ecran secondaire
 Screen('Preference', 'SkipSyncTests', 1);  % put 1 if the sync test fails
-Screen('Preference','TextRenderer',0)
+%Screen('Preference','TextRenderer',0)
 
 %To fit on every screen
 rect= Screen(screenNumber, 'Rect');
@@ -22,3 +22,10 @@ if clicks == 1
     DrawFormattedText(windowPtr,msg,'center', 'center');
     Screen('flip',windowPtr);
 end
+
+[secs, keyCode, deltaSecs] = KbWait([],2);
+escapeKey=KbName('ESCAPE');
+[a, v, keyCode]=KbCheck;
+ if any (keyCode(escapeKey));
+     sca
+ end
