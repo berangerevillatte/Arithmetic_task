@@ -65,6 +65,7 @@ end
  
 
 % Write the message
+
 DrawFormattedText(windowPtr,msg, 'center', 'center');
 Screen('Flip', windowPtr, [], []);
 
@@ -98,7 +99,6 @@ while true
             string = [string, char]; %#ok<AGROW>
     end
 
- 
 
      output = [' ', string];
      DrawFormattedText(windowPtr,output, 'center', 'center');
