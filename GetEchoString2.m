@@ -32,45 +32,54 @@ function string = GetEchoString2(windowPtr, msg, x, y, textColor, bgColor, useKb
 % 03/20/08  tsh       Added FlushEvents at the start and made bgColor and
 %                     textcolor optional
 % 10/22/10  mk        Optionally allow to use KbGetChar for keyboard input.
-
 if nargin < 7
     useKbCheck = [];
 end
-
  
-
 if isempty(useKbCheck)
     useKbCheck = 0;
 end
-
  
-
 if nargin < 6
     bgColor = [];
 end
-
  
-
 if nargin < 5
     textColor = [];
 end
-
  
-
 if ~useKbCheck
     % Flush the keyboard buffer:
     FlushEvents;
 end
 
- 
+%  % Get keypress, KbCheck style:
+% when = KbPressWait(varargin{:});
+% keycode = zeros(1,256);
+% down = 1;
+% secs = when;
+% 
+% if length(varargin) < 2
+%     untilTime = inf;
+% else
+%     untilTime = varargin{2};
+%     if isempty(untilTime)
+%         untilTime = inf;
+%     end
+% end
+% 
+% while down && (secs < untilTime)
+%     [down, secs, keyincode] = KbCheck(varargin{:});
+%     if down
+%         keycode = keycode + keyincode;
+%         secs = WaitSecs('YieldSecs', 0.001);
+%     end
+% end
 
 % Write the message
-
 DrawFormattedText(windowPtr,msg, 'center', 'center');
 Screen('Flip', windowPtr, [], []);
-
  
-
 string = '';
 while true
     if useKbCheck
@@ -78,9 +87,7 @@ while true
     else
         char = GetChar;
     end
-
  
-
     if isempty(char)
         string = '';
         return;
@@ -98,7 +105,6 @@ while true
         otherwise
             string = [string, char]; %#ok<AGROW>
     end
-
 
      output = [' ', string];
      DrawFormattedText(windowPtr,output, 'center', 'center');

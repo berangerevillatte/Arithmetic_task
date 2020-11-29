@@ -75,7 +75,7 @@ msg2 = ['mauvaise reponse, veuillez recommencer au debut.'];
 msg3 = ['time out! veuillez recommencer au debut.'];
  
 compteur = 1022;
-tic
+
 while true 
     
     b = toc;
