@@ -86,10 +86,10 @@ RT = GetSecs - startexp;
 compteur = 1022; 
 trials=0;
 answer = zeros(1,trials); %create a vector of zeros (at least the min number of trials)
-ReactionTime = zeros(1,Task_duration)
+ReactionTime = zeros(1,Task_durat)
 part_data = zeros(2,trials);
-part_data(1,i) = answer;
-part_data(2,i) = ReactionTime;
+part_data(1,:) = answer;
+part_data(2,:) = ReactionTime;
 
 % ReactionTime(1,:) = RT;
 
