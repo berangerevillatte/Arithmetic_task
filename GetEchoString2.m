@@ -53,29 +53,22 @@ if ~useKbCheck
     FlushEvents;
 end
 
-%  % Get keypress, KbCheck style:
-% when = KbPressWait(varargin{:});
-% keycode = zeros(1,256);
-% down = 1;
-% secs = when;
-% 
-% if length(varargin) < 2
-%     untilTime = inf;
-% else
-%     untilTime = varargin{2};
-%     if isempty(untilTime)
-%         untilTime = inf;
-%     end
-% end
-% 
-% while down && (secs < untilTime)
-%     [down, secs, keyincode] = KbCheck(varargin{:});
-%     if down
-%         keycode = keycode + keyincode;
-%         secs = WaitSecs('YieldSecs', 0.001);
-%     end
-% end
 
+%%  Modified
+% retrieve the current font
+textsize = Screen('TextSize', windowPtr);
+textfont = Screen('TextFont', windowPtr);
+
+% copy the existing window to an off-screen window
+origwindow = Screen('OpenOffscreenWindow', windowPtr, bgColor);
+Screen('CopyWindow',windowPtr,origwindow);
+% set the font properties of this off-screen window
+Screen('TextSize', origwindow, textsize);
+Screen('TextFont', origwindow, textfont);
+
+% Flush GetChar queue to remove stale characters:
+FlushEvents('keyDown');
+%%
 % Write the message
 DrawFormattedText(windowPtr,msg, 'center', 'center');
 Screen('Flip', windowPtr, [], []);
@@ -107,6 +100,11 @@ while true
     end
 
      output = [' ', string];
+    
+    %% Modified
+    % show it
+    Screen('CopyWindow',origwindow, windowPtr);
+%%    
      DrawFormattedText(windowPtr,output, 'center', 'center');
      Screen('Flip', windowPtr, [], []);
 end
