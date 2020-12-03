@@ -75,6 +75,7 @@ Screen('Flip', windowPtr, [], []);
  
 string = '';
 while true
+
     if useKbCheck
         char = GetKbChar(varargin{:});
     else
@@ -107,4 +108,5 @@ while true
 %%    
      DrawFormattedText(windowPtr,output, 'center', 'center');
      Screen('Flip', windowPtr, [], []);
+end
 end
