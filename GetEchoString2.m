@@ -1,6 +1,7 @@
-function string = GetEchoString2(windowPtr, msg, x, y, textColor, bgColor, useKbCheck, varargin)
+function string = GetEchoString2(windowPtr, msg, x, y, textColor, bgColor, useKbCheck, escapeKey, varargin)
 % string = GetEchoString(window, msg, x, y, [textColor], [bgColor], [useKbCheck=0], [deviceIndex], [untilTime=inf], [KbCheck args...])
-% 
+% GetEchoString2(windowPtr, msg, xCenter, yCenter, 255,[], 1, [], escapeKey,GetSecs+MaxRT)
+%
 % Get a string typed at the keyboard. Entry is terminated by
 % <return> or <enter>.
 %
@@ -21,7 +22,7 @@ function string = GetEchoString2(windowPtr, msg, x, y, textColor, bgColor, useKb
 % 2/4/97    dhb       Wrote GetEchoNumber.
 % 2/5/97    dhb       Accept <enter> as well as <cr>.
 %           dhb       Allow string return as well.
-% 3/3/97    dhb       Updated for new DrawText.  
+% 3/3/97    dhb       Updated for new DrawText.
 % 3/15/97   dgp       Created GetEchoString based on dhb's GetEchoNumber.
 % 3/20/97   dhb       Fixed bug in erase code, it wasn't updated for new
 %                       initialization.
@@ -35,19 +36,19 @@ function string = GetEchoString2(windowPtr, msg, x, y, textColor, bgColor, useKb
 if nargin < 7
     useKbCheck = [];
 end
- 
+
 if isempty(useKbCheck)
     useKbCheck = 0;
 end
- 
+
 if nargin < 6
     bgColor = [];
 end
- 
+
 if nargin < 5
     textColor = [];
 end
- 
+
 if ~useKbCheck
     % Flush the keyboard buffer:
     FlushEvents;
@@ -72,21 +73,33 @@ FlushEvents('keyDown');
 % Write the message
 DrawFormattedText(windowPtr,msg, 'center', 'center');
 Screen('Flip', windowPtr, [], []);
- 
+
 string = '';
 while true
+<<<<<<< HEAD
 
+=======
+    
+    
+    [KeyIsDown, ~, keyCode]=KbCheck;
+    if KeyIsDown && (keyCode(escapeKey))
+        sca
+        break;
+    end
+    
+    
+>>>>>>> ca12430e57e12ce79478d3d2967f8d69653fd802
     if useKbCheck
         char = GetKbChar(varargin{:});
     else
         char = GetChar;
     end
- 
+    
     if isempty(char)
         string = '';
         return;
     end
-        
+    
     switch (abs(char))
         case {13, 3, 10}
             % ctrl-C, enter, or return
@@ -99,14 +112,22 @@ while true
         otherwise
             string = [string, char]; %#ok<AGROW>
     end
-
-     output = [' ', string];
+    
+    output = [' ', string];
     
     %% Modified
     % show it
     Screen('CopyWindow',origwindow, windowPtr);
+<<<<<<< HEAD
 %%    
      DrawFormattedText(windowPtr,output, 'center', 'center');
      Screen('Flip', windowPtr, [], []);
 end
+=======
+    %%
+    DrawFormattedText(windowPtr,output, 'center', 'center');
+    Screen('Flip', windowPtr, [], []);
+end
+
+>>>>>>> ca12430e57e12ce79478d3d2967f8d69653fd802
 end
