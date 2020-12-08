@@ -4,15 +4,10 @@ function ArithmeticTask = ArithFunction(windowPtr, x, y,TaskDuration, StartCount
 step = Step; %soustraction
 MaxRT = RT; %temps de reponse maximum par trial
 count = StartCount;
-
 msg = ['Entrez votre reponse'];
 
-%function chronometre = chrono(w, duration_max, x, y, color, textsize)
-%chrono(w, duration_max, 300, 400, [255 0 0], 300);
-% part_resp = input('1022-13 :');
-% message{1} = ['Bonne reponse'];
 message{2} = ['Mauvaise reponse, veuillez recommencer du debut.'];
-message{3} = ['Le temps est ecoule! veuillez recommencer du debut.'];
+message{3} = ['Temps écoulé ! veuillez recommencer du debut.'];
 
 % Create empty structures to store data
 data = struct;
@@ -28,9 +23,9 @@ ReactionTimeMat = zeros(1,TaskDuration);
 PartRespMat = zeros(1,TaskDuration);
 
 % Initialize count and iterations
-count = 1022; 
 ii = 0;
 RespIndicator = min(PartRespMat);
+
 % Initialize time for each trials and total experimentation
 InitTimeResp = GetSecs;
 StartExp = GetSecs;    
@@ -38,16 +33,17 @@ StartExp = GetSecs;
 for ii = 1:TaskDuration
  
     GetSecs;
+    
     %message de depart
     Screen('TextSize', windowPtr, 50);
-    DrawFormattedText(windowPtr,[num2str(count) '-' num2str(step)],'center', (y-50), 255);
+    DrawFormattedText(windowPtr,[num2str(StartCount) '-' num2str(step)],'center', (y-50), 255);
     Screen('Flip', windowPtr, [], 1);
     
     FlushEvents('keyDown'); % Flush GetChar queue to remove stale characters
         
-    Screen('TextSize', windowPtr, 30);
-    DrawFormattedText(windowPtr,num2str(RespIndicator),'right', (y-300), 255);
-    Screen('Flip', windowPtr, [], 1);
+%     Screen('TextSize', windowPtr, 30);
+%     DrawFormattedText(windowPtr,num2str(RespIndicator),'right', (y-300), 255);
+%     Screen('Flip', windowPtr, [], 1);
     
     InitTimeResp = GetSecs;
     part_resp = str2num(GetEchoString2(windowPtr, msg, x, y, 255,[], 1, [], GetSecs+MaxRT));
@@ -68,8 +64,10 @@ for ii = 1:TaskDuration
             EquationMat(ii) = [num2str(count) '-' num2str(step)] ;
 
             % positive feedback on screen
-            fixRect = [x-5 y-5 x+5 y+5];%positive feedback position (from run_subjective_features_v2.m from Simon)
-            Screen('FillOval', windowPtr, [80 220 100], fixRect);%positive feedback color and oval form
+            color=[80 220 100];
+            half_size_dot =5;
+            fixRect = [x-half_size_dot y-half_size_dot x+half_size_dot y+half_size_dot];
+            Screen('FillOval', windowPtr, color, fixRect);%positive feedback color and oval form
             Screen('Flip', windowPtr, [], []);
             WaitSecs(1); % feeback presented for 1sec
 
@@ -100,14 +98,16 @@ for ii = 1:TaskDuration
             EquationMat(ii) = [num2str(count) '-' num2str(step)] ;
 
             % negative feedback on screen
-            Screen('TextSize', windowPtr, 50);
-            DrawFormattedText(windowPtr,message{2},'center', 'center', 255);
+            color=[250 10 10];
+            half_size_dot =50;
+            fixRect = [x-half_size_dot y-half_size_dot x+half_size_dot y+half_size_dot];
+            Screen('FillOval', windowPtr, color, fixRect);%positive feedback color and oval form
             Screen('Flip', windowPtr, [], []);
             WaitSecs(1); % msg presented for 1sec
 
             % Returns the first input string
             Screen('TextSize', windowPtr, 50);
-            DrawFormattedText(windowPtr,[num2str(count) '-' num2str(step)],'center', (y-50), 255);
+            DrawFormattedText(windowPtr,[num2str(StartCount) '-' num2str(step)],'center', (y-50), 255);
             Screen('Flip', windowPtr, [], 1);
 
             FlushEvents('keyDown'); % reset all events
@@ -126,7 +126,7 @@ for ii = 1:TaskDuration
 
             % Go to next iteration and reset count
             ii = ii+1;
-            count = 1022;
+            count = StartCount;
 
 
         elseif (isempty(part_resp)) & (RT < MaxRT) %empty response 
@@ -137,17 +137,19 @@ for ii = 1:TaskDuration
             EquationMat(ii) = [num2str(count) '-' num2str(step)] ;
 
             % Negative feedback on screen
-            Screen('TextSize', windowPtr, 50);
-            DrawFormattedText(windowPtr,message{2},'center', 'center', 255);
+            color=[250 10 10];
+            half_size_dot =50;
+            fixRect = [x-half_size_dot y-half_size_dot x+half_size_dot y+half_size_dot];
+            Screen('FillOval', windowPtr, color, fixRect);%positive feedback color and oval form
             Screen('Flip', windowPtr, [], []);
-            WaitSecs(1); % feedback presented for 1sec
+            WaitSecs(1);
 
             % Reinitilize count
-            count = 1022;
+            count = StartCount;
 
             % Returns the first input string
             Screen('TextSize', windowPtr, 50);
-            DrawFormattedText(windowPtr,[num2str(count) '-' num2str(step)],'center', (y-50), 255);
+            DrawFormattedText(windowPtr,[num2str(StartCount) '-' num2str(step)],'center', (y-50), 255);
             Screen('Flip', windowPtr, [], 1);
 
             FlushEvents('keyDown');
@@ -166,7 +168,7 @@ for ii = 1:TaskDuration
 
             % Go to next iteration and reset count
             ii = ii+1;
-            count = 1022;
+            count = StartCount;
 
         else % Timeout
 
@@ -176,17 +178,24 @@ for ii = 1:TaskDuration
             EquationMat(ii) = [num2str(count) '-' num2str(step)] ;
 
             % Negative feedback on screen
-            Screen('TextSize', windowPtr, 50);
+            Screen('TextSize', windowPtr, 80);
             DrawFormattedText(windowPtr,message{3},'center', 'center', 255);
-            Screen('Flip', windowPtr, [], []);
-            WaitSecs(1); % feedback presented for 1sec
+            Screen('Flip', windowPtr);
+            WaitSecs(1);
+            
+%             color=[250 10 10];
+%             half_size_dot =50;
+%             fixRect = [x-half_size_dot y-half_size_dot x+half_size_dot y+half_size_dot];
+%             Screen('FillOval', windowPtr, color, fixRect);%positive feedback color and oval form
+%             Screen('Flip', windowPtr, [], []);
+%             WaitSecs(1);
 
             % Reinitialize count
-            count = 1022;
+            count = StartCount;
 
             % Returns the first input string
-            Screen('TextSize', windowPtr, 50);
-            DrawFormattedText(windowPtr,[num2str(count) '-' num2str(step)],'center', (y-50), 255);
+            Screen('TextSize', windowPtr, 65);
+            DrawFormattedText(windowPtr,[num2str(StartCount) '-' num2str(step)],'center', (y-50), 255);
             Screen('Flip', windowPtr, [], 1);
 
             FlushEvents('keyDown'); % reset all events
@@ -205,7 +214,7 @@ for ii = 1:TaskDuration
 
             % Go to next iteration and reset count
             ii = ii+1;
-            count = 1022;
+            count = StartCount;
 
         end
     end
@@ -213,27 +222,6 @@ for ii = 1:TaskDuration
 break;
 end
 
-%% Final Message
-EndMsg = [' END !'];
-Screen('TextSize', windowPtr, 150);
-DrawFormattedText(windowPtr,EndMsg,'center', 'center', 255);
-Screen('Flip', windowPtr, [], 1);
-WaitSecs(2);
-sca
-
-%% save data
-% data.Answer(1,ii) = [AnswerMat];
-Variables = ["Equation" "Participant response" "Accuracy" "Reaction Time"];
-DataCollect = [EquationMat; PartRespMat; AnswerMat; ReactionTimeMat]';
-DataFinal = [Variables; DataCollect];
-
-if SaveData == 1
-    FileName = [SubjectCode,'_trial_', datestr(now,'dd-mm-yyyy')]; 
-elseif SaveData == 0
-    FileName = [SubjectCode,'_', datestr(now,'dd-mm-yyyy')]; 
-end
-
-xlswrite(FileName, DataFinal);
 end
 
 

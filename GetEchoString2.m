@@ -1,4 +1,4 @@
-function string = GetEchoString2(windowPtr, msg, x, y, textColor, bgColor, useKbCheck, escapeKey, varargin)
+function string = GetEchoString2(windowPtr, msg, x, y, textColor, bgColor, useKbCheck, varargin)
 % string = GetEchoString(window, msg, x, y, [textColor], [bgColor], [useKbCheck=0], [deviceIndex], [untilTime=inf], [KbCheck args...])
 % GetEchoString2(windowPtr, msg, xCenter, yCenter, 255,[], 1, [], escapeKey,GetSecs+MaxRT)
 %
@@ -76,19 +76,7 @@ Screen('Flip', windowPtr, [], []);
 
 string = '';
 while true
-<<<<<<< HEAD
-
-=======
     
-    
-    [KeyIsDown, ~, keyCode]=KbCheck;
-    if KeyIsDown && (keyCode(escapeKey))
-        sca
-        break;
-    end
-    
-    
->>>>>>> ca12430e57e12ce79478d3d2967f8d69653fd802
     if useKbCheck
         char = GetKbChar(varargin{:});
     else
@@ -118,16 +106,9 @@ while true
     %% Modified
     % show it
     Screen('CopyWindow',origwindow, windowPtr);
-<<<<<<< HEAD
-%%    
-     DrawFormattedText(windowPtr,output, 'center', 'center');
-     Screen('Flip', windowPtr, [], []);
-end
-=======
     %%
     DrawFormattedText(windowPtr,output, 'center', 'center');
     Screen('Flip', windowPtr, [], []);
 end
 
->>>>>>> ca12430e57e12ce79478d3d2967f8d69653fd802
 end

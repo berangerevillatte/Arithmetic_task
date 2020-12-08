@@ -37,17 +37,18 @@ yCenter = round(rect(4)/2);
 
 %% Instructions
 Screen('TextSize', windowPtr, 20);
-Inst_1 = ['Vous allez devoir effectuer une tâche arythmétique. Vous devrez :',newline, newline,newline,newline,...
-    newline,'1. Soustraire un nombre d''un autre nombre',newline,...
-    newline,'2. Vous souvenir du résultat, et soustraire encore 17, et ainsi de suite jusqu''à atteindre 0.',newline,newline,...
-    '1078 - 17 ',newline,newline,'1061',newline,'1044',newline,'1027',newline,'...',newline,newline,'A chaque fois, vous n''aurez que 7.5 secondes pour repondre.',...
-    newline,'Il est donc important que vous soyez rapide et précis, puisque s''il y a une erreur, vous devrez recommencer au début.',newline,newline,newline,newline,newline,newline,...
-    'Appuyez sur une touche pour débuter l''entraînement'];
+Inst_1 = ['Vous allez devoir effectuer une tâche arythmétique.',newline,'Prenez le chiffre 1022 et soustrayez 13, puis soustrayez encore 13, et ainsi de suite.',newline,'A chaque fois, vous n''aurez que 7.5 secondes pour repondre.',newline,newline,newline,newline,'Pour continuez, appuyer sur une touche'];
 DrawFormattedText(windowPtr,Inst_1,'center', 'center', 255);
 Screen('Flip', windowPtr);
 [secs, keyCode, deltaSecs] = KbWait([], 2);
 
-%% Training Session
+Inst_2 = ['Il est donc important que vous soyez rapide et précis, puisque s''il y a une erreur, vous devrez recommencer à 1022.',newline,newline,newline,newline,...
+     'Appuyez sur une touche pour débuter l''entraînement'];
+DrawFormattedText(windowPtr,Inst_1,'center', 'center', 255);
+Screen('Flip', windowPtr);
+[secs, keyCode, deltaSecs] = KbWait([], 2);
+
+% %% Training Session
 SaveData = 0;
 StartCount = 1078;
 Step = 17;
@@ -56,7 +57,16 @@ TaskDuration = 20; % Default for training session
 ArithFunction(windowPtr, xCenter, yCenter, TaskDuration, StartCount, Step, RT, SaveData);
 WaitSecs(1);
 
-%% Calcul mental
+% %% Transition message 
+
+Inst_2 = ['Vous êtes maintenant prêt à passer à la tâche. Vos réponses seront enregistrées.',newline, newline,newline,newline,...
+    'Appuyez sur une touche pour débuter la tâche.'];
+Screen('TextSize', windowPtr, 20);
+DrawFormattedText(windowPtr,Inst_2,'center', 'center', 255);
+Screen('Flip', windowPtr);
+[secs, keyCode, deltaSecs] = KbWait([], 2);
+% 
+%% Task
 SaveData = 1;
 StartCount = 1022;
 Step = 13;
@@ -64,4 +74,24 @@ RT = 7.5;
 ArithFunction(windowPtr, xCenter, yCenter, TaskDuration1, StartCount, Step, RT, SaveData);
 WaitSecs(1);
 
+%% Final Message
+EndMsg = [' Epreuve terminée. '];
+Screen('TextSize', windowPtr, 80);
+DrawFormattedText(windowPtr,EndMsg,'center', 'center', 255);
+Screen('Flip', windowPtr, [], 1);
+WaitSecs(2);
+sca
 
+%% save data
+% data.Answer(1,ii) = [AnswerMat];
+Variables = ["Equation" "Participant response" "Accuracy" "Reaction Time"];
+DataCollect = [EquationMat; PartRespMat; AnswerMat; ReactionTimeMat]';
+DataFinal = [Variables; DataCollect];
+
+if SaveData == 1
+    FileName = [SubjectCode,'_trial_', datestr(now,'dd-mm-yyyy')]; 
+elseif SaveData == 0
+    FileName = [SubjectCode,'_', datestr(now,'dd-mm-yyyy')]; 
+end
+
+xlswrite(FileName, DataFinal);
