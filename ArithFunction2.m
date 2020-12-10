@@ -10,7 +10,7 @@ msg2 = ['Le temps est ecoule! veuillez recommencer du debut.'];
 try
     KbName('UnifyKeyNames');
     ListenChar(-1); % Allows concurrent use of ListenChar for character suppression, while at the same time using keyboard queues for character and key input.
-possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('BackSpace'), KbName('1'), ...
+possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('delete'), KbName('1'), ...
     KbName('2'),KbName('3'),KbName('4'), ...
     KbName('5'),KbName('6'),KbName('7'), ...
     KbName('8'),KbName('9'),KbName('0')];
@@ -45,37 +45,37 @@ startExp = GetSecs;
             case 'RETURN'
                 enterIsDown = true; % ends the while loop and goes to feedback
                 KbQueueRelease();
-            case 'BackSpace' % backspace
+            case 'delete' % backspace
                 if ~isempty(temp) % as in GetEchoString to erase numbers 
                     temp = temp(1:length(temp)-1);
                 end
             case {'1'}
-                temp = [temp '1']
+                temp = [temp '1'];
             case {'2'}
-                temp = [temp '2']
+                temp = [temp '2'];
             case {'3'}
-                temp = [temp '3']
+                temp = [temp '3'];
             case {'4'}
-                temp = [temp '4']
+                temp = [temp '4'];
             case {'5'}
-                temp = [temp '5']
+                temp = [temp '5'];
             case {'6'}
-                temp = [temp '6']
+                temp = [temp '6'];
             case {'7'}
-                temp = [temp '7']
+                temp = [temp '7'];
             case {'8'}
-                temp = [temp '8']
+                temp = [temp '8'];
             case {'9'}
-                temp = [temp '9']
+                temp = [temp '9'];
             case {'01'}
-                temp = [temp '0']
+                temp = [temp '0'];
             otherwise
                 error ('not a valid number')
         end
     end
     
     %% Print string number to screen
-    output = [' ', temp] % as in GetEchoString
+    output = [' ', temp]; % as in GetEchoString
     partResp = str2double(temp);
     Screen('TextSize', windowPtr, 50);
     DrawFormattedText(windowPtr,output, 'center', 'center', 255);
@@ -110,7 +110,7 @@ startExp = GetSecs;
         % Save data in matrices
         answ(ntrial+1).step = 1; % Start from beginning
         data(ntrial).partResp = partResp;
-        data(ntrial).rt = [data.rt, responseTime;
+        data(ntrial).rt = [data.rt, responseTime];
         data(ntrial).accuracy = accuracy;
         
         % negative feedback on screen

@@ -26,88 +26,65 @@ Screen('Preference', 'SkipSyncTests', 1);  % put 1 if the sync test fails
 rect = Screen(screenNumber, 'Rect');
 % resolution= Screen('Resolution', screenNumber);
 % hz = Screen('FrameRate', screenNumber); %creer une frequence dimage
-couleur_ecran = [87 87 87];%Ecran gris
+couleur_ecran = [100 100 100];%Ecran gris
 % [windowPtr, rect]=Screen('OpenWindow',screenNumber, couleur_ecran);
 windowPtr = Screen('OpenWindow',screenNumber, couleur_ecran);
 
-%define center of screens
-xCenter = round(rect(3)/2);
-yCenter = round(rect(4)/2);
+StartSecs = GetSecs;
+RTMax = 7.5;
 
-%% progress bar
-%% Video
-moviename = [ PsychtoolboxRoot 'PsychDemos/MovieDemos/ProgBar_Video.mov' ];
+%% Print to screen
+printTimer(windowPtr,trialTimer,RTMax);
 
-InitSecs = GetSecs;
-part_resp = str2num(GetEchoString2(windowPtr, msg, xCenter, yCenter+300, 255,[], 1, [], GetSecs+MaxRT));
-GetSecs;
+Screen('TextSize', windowPtr, 50);
+DrawFormattedText(windowPtr,output, 'center', 'center');
+    if answ(ntrial).step == 1    %% Print equation
+        DrawFormattedText(windowPtr,eqStr,'center', (yCenter-200), 255);
+    end
+Screen('Flip', windowPtr, [], []);
 
-RT = GetSecs - InitSecs;
+%% Update timer, check if time is up
+trialTimer = GetSecs - StartSecs;
+if (trialTimer >= RTMax), isTrialTout = true; end
 
-% Open 'windowrect' sized window on screen, with black [0] background color:
-% windowPtr = Screen('OpenWindow', 1, 0, rect/2);
-movie = Screen('OpenMovie', windowPtr, moviename);% Open movie file
-Screen('PlayMovie', movie, 1);% Start playback engine
-
-
- while ~KbCheck
-        % Wait for next movie frame, retrieve texture handle to it
-        tex = Screen('GetMovieImage', windowPtr, movie);
-        
-        % Valid texture returned? A negative value means end of movie reached:
-        if tex<=0
-            % We're done, break out of loop:
-            break;
-        end
-        
-        % Draw the new texture immediately to screen:
-        Screen('DrawTexture', windowPtr, tex);
-
-        % Update display:
-        Screen('Flip', windowPtr,[],1);
-
-        % Release texture:
-        Screen('Close', tex);
- end
-
-% Stop playback:
-Screen('PlayMovie', movie, 0);
-
-% Close movie:
-Screen('CloseMovie', movie);
-    
-% Close Screen, we're done:
-sca;    
-
-%% Images
-
-FlushEvents('keyDown'); % Flush GetChar queue to remove stale characters
-
-startexp = GetSecs;
-part_resp = str2num(GetEchoString2(windowPtr, msg, xCenter, yCenter, 255,[], 1, [], GetSecs+MaxRT));
-GetSecs;
-RT = GetSecs - startexp
-
-ii = 0;
-Startsecs = GetSecs;    
-for ii = 1:0.5:7.5 
-    
-    xMax = (xCenter - 225) + ((ii)*60);
-    
-    fixRect2 = [xMax yCenter-300 xCenter+225 yCenter-290];
-    Screen('fillRect', windowPtr, 255, fixRect2);
-    Screen('flip', windowPtr, 1, 1);
-
-    fixRect3 = [xCenter-225 yCenter-300 xMax yCenter-290];
-    Screen('fillRect', windowPtr, [255 0 0], fixRect3);
-    Screen('flip', windowPtr, 1, 1);
-    WaitSecs(0.5);
-    
-    ii = ii + 1;
+function printTimer(windowPtr,trialTimer,trialTout)
+% Adds a progress bar showing the time left in the frame buffer of windowPtr
+    rectColor = [256,0,0];
+    penWidth = 5;
+    rectW = 300;
+    rectH = 50;
+    rectWtime = round(rectW*(trialTimer/trialTout));
+    rectOutline = [0, 0, rectW, rectH];
+    rectProgress = [0, 0, rectWtime, rectH];
+    Screen('FrameRect', windowPtr, rectColor, rectOutline, penWidth);
+    Screen('FillRect', windowPtr, rectColor, rectProgress);
 end
-
-GetSecs;
-BarDuration = GetSecs - Startsecs
-
-WaitSecs(3);
-sca
+% %% Fonction ancienne
+%  FlushEvents('keyDown'); % Flush GetChar queue to remove stale characters
+% 
+% startexp = GetSecs;
+% part_resp = str2num(GetEchoString2(windowPtr, msg, xCenter, yCenter, 255,[], 1, [], GetSecs+MaxRT));
+% GetSecs;
+% RT = GetSecs - startexp
+% 
+% ii = 0;
+% Startsecs = GetSecs;    
+% for ii = 1:0.5:7.5 
+%     
+%     xMax = (xCenter - 225) + ((ii)*60);
+%     
+%     fixRect2 = [xMax yCenter-300 xCenter+225 yCenter-290];
+%     Screen('fillRect', windowPtr, 255, fixRect2);
+%     Screen('flip', windowPtr, 1, 1);
+% 
+%     fixRect3 = [xCenter-225 yCenter-300 xMax yCenter-290];
+%     Screen('fillRect', windowPtr, [255 0 0], fixRect3);
+%     Screen('flip', windowPtr, 1, 1);
+%     WaitSecs(0.5);
+% end
+% 
+% GetSecs;
+% BarDuration = GetSecs - Startsecs
+% 
+% WaitSecs(3);
+% sca
