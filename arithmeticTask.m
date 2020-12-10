@@ -43,7 +43,7 @@ instruct = ['Vous allez devoir effectuer une tâche arithmétique.',newline, ...
 instruct2 = ['Il est donc important que vous soyez rapide et précis, puisque', ...
     ' s''il y a une erreur, vous devrez recommencer à 1022.',newline,newline,newline,newline, ...
     'Appuyez sur une touche pour debuter'];
-instructTout = ['Le temps est ecoule! veuillez recommencer du debut.'];
+instructTout = ['Temps ecoule!'];
 %% Keyboard
 KbName('UnifyKeyNames');
 kbDevID = []; 
@@ -72,7 +72,6 @@ trialTout = 7.5; % max time allocated per trial
 
 data(1:maxTrials) = struct('Step',NaN,'Accuracy',NaN,'partResp',NaN,'RT',NaN);
 data(1).Step = 1;
-
 %% Initialize other variables
 escIsDown = false;
 isTaskTout = false;
@@ -141,6 +140,16 @@ try
                         error ('not a valid number');
                 end
             end
+            %% Print timer on screen
+            rectColor = [256,0,0];
+            penWidth = 5;
+            rectW = 300;
+            rectH = 50;
+            rectWtime = round(rectW*(trialTimer/trialTout));
+            rectOutline = [0, 0, rectW, rectH];
+            rectProgress = [0, 0, rectWtime, rectH];
+            Screen('FrameRect', windowPtr, rectColor, rectOutline, penWidth);
+            Screen('FillRect', windowPtr, rectColor, rectProgress);
             
             %% Print string number to screen
             output = [' ', 'Reponse : ', temp]; % as in GetEchoString
@@ -162,7 +171,8 @@ try
         if isTrialTout % Ran out of time before giving answer
             data(ntrials+1).Step = 1; % Start from beginning
             data(ntrials).Accuracy   = false;
-            DrawFormattedText(windowPtr,instructTout,'center', 'center', 255);        % Time out feedback on screen
+            color=[250 10 10]; halfSizeDot =50;
+            DrawFormattedText(windowPtr,instructTout,'center', yCenter-100, 255);        % Time out feedback on screen
             
         elseif enterIsDown && (str2double(temp) ~= goodAnsw) % Gave wrong answer
             data(ntrials+1).Step = 1; % Start from beginning
