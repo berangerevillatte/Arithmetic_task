@@ -1,19 +1,23 @@
-
 function dataFinal = arithmeticTask()
+%% Arithmetic task developped for the course PSY6976, Universite de Montreal, 2020 
+%
+% For more information, see README.md file at https://github.com/berangerevillatte/Arithmetic_task
+%
+% authors : Berangere Villatte <berangere.villatte@umontreal.ca> & Charlotte Bigras <charlotte.bigras@umontreal.ca>
 %% Ask for subject code
-subjectCode = input('Entrer le code du participant : ','s');
+subjectCode = input('Entrez le code du participant : ','s');
 if isempty(subjectCode)
   subjectCode = 'trial';
 end
 
 %% Ask for operating system (Mac? Linux? Windows?)
-OSType = input('Êtes-vous sur MacOS ? [Y/N] ','s');
+OSType = input('Etes-vous sur MacOS ? [Y/N] ','s');
 if (strcmp(OSType,'Y')|| strcmp(OSType,'y')) == 1 
     Screen('Preference','TextRenderer',0);
 end
 
 %% Ask for duration of the task in seconds
-taskDuration = str2num(input('Quelle est la durée de la tâche (secs)? : ','s'));
+taskDuration = str2num(input('Quelle est la duree de la tache (secs)? : ','s'));
 
 %% Initialize screens and keyboards
 AssertOpenGL %compatible version of psychtoolbox with GL
@@ -29,28 +33,29 @@ screenColor=[100 100 100];% background screen color is grey
 xCenter = round(rect(3)/2);
 yCenter = round(rect(4)/2);
 
-%% Give instructions
-Screen('TextSize', windowPtr, 30);
-msgs{1} = ['Vous allez devoir effectuer une tâche arithmétique.',newline, ...
-    'Prenez le chiffre 1022 et soustrayez 13, puis soustrayez encore 13, et ainsi de suite.', ...
-    newline,'À chaque fois, vous n''aurez que 7.5 secondes pour répondre.', ...
-    newline,newline,newline,newline,'Pour continuer, appuyez sur une touche'];
-DrawFormattedText(windowPtr,msgs{1},'center', 'center', 255);
-Screen('Flip', windowPtr);
-[secs, keyCode, deltaSecs] = KbWait([], 2); % Press any key to continue to next screen
-
-msgs{2} = ['Il est donc important que vous soyez rapide et précis, puisque', ...
-    ' s''il y a une erreur, vous devrez recommencer à 1022.',newline,newline,newline,newline, ...
-    'Appuyez sur une touche pour débuter'];
-DrawFormattedText(windowPtr,msgs{2},'center', 'center', 255);
-Screen('Flip', windowPtr);
-[secs, keyCode, deltaSecs] = KbWait([], 2); % Press any key to continue to next screen
-
 %% Compute main session parameters
 maxTrials = taskDuration; % Max number of trials a person could reasonably give within the time limit
 startCount = 1022; % Starting number for arithmetic task
 subtract = 13; % step size subtraction
 trialTout = 7.5; % max time allocated per trial
+
+%% Give instructions
+Screen('TextSize', windowPtr, 30);
+msgs{1} = ['Vous allez devoir effectuer une tâche arithmetique.', newline, ...
+    sprintf('Prenez le chiffre %d et soustrayez %.d, puis soustrayez encore 13, et ainsi de suite.', startCount, subtract), ...
+    newline,sprintf('À chaque fois, vous n''aurez que %.1f secondes pour répondre.', trialTout), ...
+    newline,newline,newline,newline,'Pour continuer, appuyez sur une touche'];
+DrawFormattedText(windowPtr,msgs{1},'center', 'center', 255);
+Screen('Flip', windowPtr);
+[secs, keyCode, deltaSecs] = KbWait([], 2); % Press any key to continue to next screen
+
+msgs{2} = ['Il est donc important que vous soyez rapide et precis, puisque', ...
+    sprintf(' s''il y a une erreur, vous devrez recommencer à %d.', startCount),newline,newline,newline,newline, ...
+    'Appuyez sur une touche pour debuter'];
+DrawFormattedText(windowPtr,msgs{2},'center', 'center', 255);
+Screen('Flip', windowPtr);
+[secs, keyCode, deltaSecs] = KbWait([], 2); % Press any key to continue to next screen
+
 
 %% Initialize participant answer data structure
 data(1:maxTrials) = struct('Step',NaN,'Accuracy',NaN,'partResp',NaN,'RT',NaN);
@@ -72,7 +77,7 @@ ntrials = 0; % Initialize count and iterations
         if (taskTimer >= taskDuration), isTaskTout = true; end
     end
 
-endMsg = [' Epreuve terminée. '];
+endMsg = [' Epreuve terminee. '];
 DrawFormattedText(windowPtr,endMsg,'center', 'center', 255);
 Screen('Flip', windowPtr, [], []);
 WaitSecs(2);

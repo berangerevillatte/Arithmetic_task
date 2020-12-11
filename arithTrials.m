@@ -3,7 +3,7 @@ function [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntria
 %% Keyboard
 KbName('UnifyKeyNames'); 
 %KbName PTB3 : In the case of labels such as “5”, which appears on two keys, the name “5” designates the “5” key on the numeric keypad and “5%” designates the QWERTY “5” key.
-possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('delete'), KbName('1'),KbName('1!'), ...
+possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('BACKSPACE'), KbName('DELETE') KbName('1'),KbName('1!'), ... % delete to erase with Mac
     KbName('2'),KbName('2@'),KbName('3'),KbName('3#'),KbName('4'),KbName('4$'), ...
     KbName('5'),KbName('5%'),KbName('6'),KbName('6^'),KbName('7'),KbName('7&'), ...
     KbName('8'),KbName('8*'),KbName('9'),KbName('9('),KbName('0'),KbName('0)'),];
@@ -38,7 +38,7 @@ while (~isTrialTout && ~enterIsDown && ~escIsDown) %loop to get keyboard string 
             case 'return'
                 enterIsDown = true; % ends the while loop and goes to feedback
                 KbQueueRelease();
-            case 'delete' % delete
+            case {'backspace', 'delete'} % delete
                 if ~isempty(temp) % as in GetEchoString to erase numbers
                     temp = temp(1:length(temp)-1);
                 end
@@ -88,7 +88,7 @@ if isTrialTout % Ran out of time before giving answer
     data(ntrials+1).Step = 1; % Start from beginning
     data(ntrials).Accuracy   = false;
     color=[250 10 10]; halfSizeDot =50;
-    DrawFormattedText(windowPtr,'Temps écoulé !','center', yCenter-100, 255);        % Time out feedback on screen
+    DrawFormattedText(windowPtr,'Temps ecoule !','center', yCenter-100, 255);        % Time out feedback on screen
 
 elseif enterIsDown && (str2double(temp) ~= goodAnsw) % Gave wrong answer
     data(ntrials+1).Step = 1; % Start from beginning
