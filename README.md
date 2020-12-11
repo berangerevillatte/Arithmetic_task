@@ -1,7 +1,7 @@
 # Arithmetic_task
 
 Tâche réalisée par Bérangère Villatte <berangere.villatte@umontreal.ca> et Charlotte Bigras <charlotte.bigras@umontreal.ca>
-dans le cadre du cours PSY2038, Universit. de Montréal, 2020
+dans le cadre du cours PSY2038, Université de Montréal, 2020
 
 Tâche silencieuse de calcul mental par affichage visuel induisant un stress psychologique.
 
