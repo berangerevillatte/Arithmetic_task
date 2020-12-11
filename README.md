@@ -2,7 +2,7 @@
 
 Authors: Bérangère Villatte <berangere.villatte@umontreal.ca> and Charlotte Bigras <charlotte.bigras@umontreal.ca>
 
-Codes as part of the PSY2038 course, Université de Montréal, 2020.
+Coded as part of the PSY2038 course, Université de Montréal, 2020.
 
 Silent task of mental calculation by visual display inducing psychological stress.
 
