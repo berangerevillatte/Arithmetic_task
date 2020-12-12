@@ -83,9 +83,7 @@ ntrials = 0; % Initialize count and iterations
         if (taskTimer >= taskTout), isTaskTout = true; end
     end
 
-%% Extract best value
-[maxStep, maxpartResp, maxIdx] = getMaxStep(data);
-
+%% End message
 endMsg = [' Epreuve terminee. '];
 DrawFormattedText(windowPtr,endMsg,'center', 'center', 255);
 DrawFormattedText(windowPtr,['Meilleur score : ' num2str(maxpartResp)],'center', yCenter+150, 255); % Show best value to screen
@@ -109,22 +107,3 @@ writetable(struct2table(data), excelPath);
 
 end
 
-function [maxStep, maxpartResp, maxIdx] = getMaxStep(data)
-    maxStepCandidate = max([data.Step]); % The highest step reached
-    idxMaxCandidate = find([data.Step] == maxStepCandidate); % Idx of all trials where subject reached that highest step
-    if find([data(idxMaxCandidate).Accuracy] == true) % If any of those was good
-        maxStep = maxStepCandidate; % That's the highest he went
-        maxIdx = idxMaxCandidate(1);
-        maxpartResp = data(maxIdx).partResp;
-    elseif maxStepCandidate == 1 % The subject got all answers wrong
-        maxStep = NaN;
-        maxIdx = NaN;
-    else
-        maxStep = maxStepCandidate - 1; % Then his highest is the max - 1, since
-                                        % he necessarily got the previous
-                                        % one right
-        maxVect = find([data.Step] == (maxStepCandidate - 1));
-        maxIdx = maxVect(1);
-        maxpartResp = data(maxIdx).partResp;
-    end
-end

@@ -1,4 +1,4 @@
-function [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract, msgs)
+function [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract)
 
 %% Keyboard
 KbName('UnifyKeyNames'); 
