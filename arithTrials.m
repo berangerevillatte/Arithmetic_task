@@ -3,13 +3,12 @@ function [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntria
 %% Keyboard
 KbName('UnifyKeyNames'); 
 %KbName PTB3 : In the case of labels such as “5”, which appears on two keys, the name “5” designates the “5” key on the numeric keypad and “5%” designates the QWERTY “5” key.
-possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('BACKSPACE'), KbName('DELETE') KbName('1'),KbName('1!'), ... % delete to erase with Mac
+possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('BackSpace'), KbName('DELETE'), KbName('1'),KbName('1!'), ... % delete to erase with Mac
     KbName('2'),KbName('2@'),KbName('3'),KbName('3#'),KbName('4'),KbName('4$'), ...
     KbName('5'),KbName('5%'),KbName('6'),KbName('6^'),KbName('7'),KbName('7&'), ...
     KbName('8'),KbName('8*'),KbName('9'),KbName('9('),KbName('0'),KbName('0)'),];
 keyList = zeros(256,1); %https://stackoverflow.com/questions/45961412/using-kbqueuecheck-to-continuously-check-for-device-input
 keyList(possibleKeys) = 1;
-
 %% Experiment loop
 try
 ListenChar(-1); % Allows concurrent use of ListenChar for character suppression, while at the same time using keyboard queues for character and key input.
@@ -41,7 +40,7 @@ while (~isTrialTout && ~enterIsDown && ~escIsDown) %loop to get keyboard string 
             case {'backspace', 'delete'} % delete
                 if ~isempty(temp) % as in GetEchoString to erase numbers
                     temp = temp(1:length(temp)-1);
-                end
+                end              
             case {'1', '1!'}
                 temp = [temp '1'];
             case {'2', '2@'}

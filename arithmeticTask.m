@@ -6,6 +6,7 @@ function dataFinal = arithmeticTask()
 %
 % authors : Berangere Villatte <berangere.villatte@umontreal.ca> & Charlotte Bigras <charlotte.bigras@umontreal.ca>
 
+clear all;
 %% Ask for subject code
 subjectCode = input('Entrez le code du participant : ','s');
 if isempty(subjectCode)
@@ -84,7 +85,8 @@ ntrials = 0; % Initialize count and iterations
     end
 
 %% Extract best value
-[maxStep, maxpartResp, maxIdx] = getMaxStep(data);
+data = data(1:ntrials);
+[maxStep, maxpartResp] = getMaxStep(data);
 
 endMsg = [' Epreuve terminee. '];
 DrawFormattedText(windowPtr,endMsg,'center', 'center', 255);
@@ -109,22 +111,18 @@ writetable(struct2table(data), excelPath);
 
 end
 
-function [maxStep, maxpartResp, maxIdx] = getMaxStep(data)
+function [maxStep, maxpartResp] = getMaxStep(data)
     maxStepCandidate = max([data.Step]); % The highest step reached
     idxMaxCandidate = find([data.Step] == maxStepCandidate); % Idx of all trials where subject reached that highest step
     if find([data(idxMaxCandidate).Accuracy] == true) % If any of those was good
         maxStep = maxStepCandidate; % That's the highest he went
-        maxIdx = idxMaxCandidate(1);
-        maxpartResp = data(maxIdx).partResp;
+        maxpartResp = data(idxMaxCandidate).partResp;
     elseif maxStepCandidate == 1 % The subject got all answers wrong
         maxStep = NaN;
-        maxIdx = NaN;
     else
         maxStep = maxStepCandidate - 1; % Then his highest is the max - 1, since
                                         % he necessarily got the previous
                                         % one right
-        maxVect = find([data.Step] == (maxStepCandidate - 1));
-        maxIdx = maxVect(1);
-        maxpartResp = data(maxIdx).partResp;
+        maxpartResp = data(idxMaxCandidate-1).partResp;
     end
 end
