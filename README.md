@@ -22,6 +22,8 @@ Before starting the task, you must
 2. Indicate whether the user is using a Mac operating system (yes or no)
 3. Select the duration of the task (set to 300 sec (5min) by default).
 
+Note that a minimum 30-second training period is important before the real task begins, by changing first number (1022) and step (13).
+
 The default values of the main variables are as follows, but can be changed:
 startCount = 1022; % Starting number for arithmetic task
 subtract = 13; % step size subtraction
