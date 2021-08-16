@@ -1,10 +1,12 @@
 
 function dataFinal = arithmeticTask()
-%% Arithmetic task developped for the course PSY6976, Universite de Montreal, 2020 
+%% This silent arithmetic task has been developed as an effective stressor for EEG or every experiment where 
+% participants have to remain still and silent (2020)
 %
 % For more information, see README.md file at https://github.com/berangerevillatte/Arithmetic_task
 %
-% authors : Berangere Villatte <berangere.villatte@umontreal.ca> & Charlotte Bigras <charlotte.bigras@umontreal.ca>
+% authors : Berangere Villatte <berangere.villatte@umontreal.ca>, Charlotte Bigras <charlotte.bigras@umontreal.ca> 
+% & Frederik Desaulniers <frederik.desaulniers@umontreal.ca>
 
 clear all;
 %% Ask for subject code
@@ -49,9 +51,9 @@ trialTout = 7.5; % max time allocated per trial
 
 %% Give instructions
 Screen('TextSize', windowPtr, 30);
-msgs{1} = ['Vous allez devoir effectuer une t‚che arithmetique.', newline, ...
+msgs{1} = ['Vous allez devoir effectuer une t√¢che arithmetique.', newline, ...
     sprintf('Prenez le chiffre %d et soustrayez %.d, puis soustrayez encore 13, et ainsi de suite.', startCount, subtract), ...
-    newline,sprintf('¿ chaque fois, vous n''aurez que %.1f secondes pour rÈpondre.', trialTout), ...
+    newline,sprintf('√Ä chaque fois, vous n''aurez que %.1f secondes pour r√©pondre.', trialTout), ...
     newline,newline,newline,newline,'Pour continuer, appuyez sur une touche'];
 DrawFormattedText(windowPtr,msgs{1},'center', 'center', 255);
 Screen('Flip', windowPtr);
