@@ -113,10 +113,11 @@ isTaskTout = false;
 taskTimer = 0; 
 taskIni = GetSecs;
 ntrials = 0; % Initialize count and iterations
-
+timestamps = [""];
 %% Experiment loop
     while ~isTaskTout && ~escIsDown % Experiment loop
         ntrials = ntrials +1;
+        timestamps(end+1) = datestr(now,'HH:MM:SS.FFF'); 
         [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract);
         %% Update Timer, check if task time is up    
         taskTimer = GetSecs - taskIni;% Update timer, check if time is up
@@ -151,9 +152,11 @@ if ~isfolder(dataDir), mkdir(dataDir); end
 
 matPath = fullfile(dataDir,sprintf('%s.mat', fileName));
 excelPath = fullfile(dataDir, sprintf('%s.xlsx', fileName));
+csvPath = fullfile(dataDir, sprintf('%s.csv', fileName));
 
 save(matPath, 'data'); 
 writetable(struct2table(data), excelPath);
+writetable(array2table(timestamps), csvPath);
 
 end
 
