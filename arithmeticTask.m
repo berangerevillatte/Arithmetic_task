@@ -118,7 +118,7 @@ timestamps = [""];
     while ~isTaskTout && ~escIsDown % Experiment loop
         ntrials = ntrials +1;
         timestamps(end+1) = datestr(now,'HH:MM:SS.FFF'); 
-        [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract);
+        [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract, inEnglish);
         %% Update Timer, check if task time is up    
         taskTimer = GetSecs - taskIni;% Update timer, check if time is up
         if (taskTimer >= taskTout), isTaskTout = true; end

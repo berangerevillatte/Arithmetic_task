@@ -1,8 +1,8 @@
-function [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract)
+function [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract, inEnglish)
 
 %% Keyboard
 KbName('UnifyKeyNames'); 
-%KbName PTB3 : In the case of labels such as “5”, which appears on two keys, the name “5” designates the “5” key on the numeric keypad and “5%” designates the QWERTY “5” key.
+%KbName PTB3 : In the case of labels such as “5�?, which appears on two keys, the name “5�? designates the “5�? key on the numeric keypad and “5%�? designates the QWERTY “5�? key.
 possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('BackSpace'), KbName('DELETE'), KbName('1'),KbName('1!'), ... % delete to erase with Mac
     KbName('2'),KbName('2@'),KbName('3'),KbName('3#'),KbName('4'),KbName('4$'), ...
     KbName('5'),KbName('5%'),KbName('6'),KbName('6^'),KbName('7'),KbName('7&'), ...
@@ -68,7 +68,11 @@ while (~isTrialTout && ~enterIsDown && ~escIsDown) %loop to get keyboard string 
     %% Print timer on screen
     printTimer(windowPtr,trialTimer,trialTout);
     %% Print string number to screen
-    output = [' ', 'Reponse : ', temp]; % as in GetEchoString
+    if inEnglish
+        output = [' ', 'Answer : ', temp]; % as in GetEchoString
+    else
+        output = [' ', 'Reponse : ', temp]; % as in GetEchoString
+    end
     Screen('TextSize', windowPtr, 50);
     DrawFormattedText(windowPtr, output, 'center', 'center', 255);
 
@@ -87,8 +91,12 @@ if isTrialTout % Ran out of time before giving answer
     data(ntrials+1).Step = 1; % Start from beginning
     data(ntrials).Accuracy   = false;
     color=[250 10 10]; halfSizeDot =50;
-    DrawFormattedText(windowPtr,'Temps ecoule !','center', yCenter-100, 255);        % Time out feedback on screen
-
+    if inEnglish
+        DrawFormattedText(windowPtr,'Time elapsed!','center', yCenter-100, 255);        % Time out feedback on screen
+    else
+        DrawFormattedText(windowPtr,'Temps ecoule !','center', yCenter-100, 255);        % Time out feedback on screen
+    end
+    
 elseif enterIsDown && (str2double(temp) ~= goodAnsw) % Gave wrong answer
     data(ntrials+1).Step = 1; % Start from beginning
     data(ntrials).Accuracy = false;
