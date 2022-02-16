@@ -114,10 +114,12 @@ taskTimer = 0;
 taskIni = GetSecs;
 ntrials = 0; % Initialize count and iterations
 timestamps = [""];
+ntrialsStr4timestamps = [""];
 %% Experiment loop
     while ~isTaskTout && ~escIsDown % Experiment loop
         ntrials = ntrials +1;
         timestamps(end+1) = datestr(now,'HH:MM:SS.FFF'); 
+        ntrialsStr4timestamps(end+1) = num2str(ntrials);
         [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract, inEnglish);
         %% Update Timer, check if task time is up    
         taskTimer = GetSecs - taskIni;% Update timer, check if time is up
@@ -156,7 +158,7 @@ csvPath = fullfile(dataDir, sprintf('%s.csv', fileName));
 
 save(matPath, 'data'); 
 writetable(struct2table(data), excelPath);
-writetable(array2table(timestamps), csvPath);
+writetable(array2table(array2table([timestamps.',ntrialsStr4timestamps.'],'VariableNames',{'Timestamps','TrialNumber'})), csvPath);
 
 end
 
