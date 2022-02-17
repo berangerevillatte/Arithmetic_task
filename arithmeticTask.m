@@ -10,7 +10,7 @@ function dataFinal = arithmeticTask()
 
 clear all;
 %% Ask for language preference
-language = input('English / Fran�ais ? [E/F] ','s');
+language = input('English / Français ? [E/F] ','s');
 if (strcmp(language,'E')|| strcmp(language,'e')) == 1 
     inEnglish = 1;
 else
@@ -81,9 +81,9 @@ if inEnglish
         newline,sprintf('Each time, you will only have %.1f seconds to respond.', trialTout), ...
         newline,newline,newline,newline,'To continue, press any key'];
 else
-    msgs{1} = ['Vous allez devoir effectuer une tâche arithmetique.', newline, ...
+    msgs{1} = ['Vous allez devoir effectuer une tÃ¢che arithmetique.', newline, ...
         sprintf('Prenez le chiffre %d et soustrayez %.d, puis soustrayez encore 13, et ainsi de suite.', startCount, subtract), ...
-        newline,sprintf('À chaque fois, vous n''aurez que %.1f secondes pour répondre.', trialTout), ...
+        newline,sprintf('Ã€ chaque fois, vous n''aurez que %.1f secondes pour rÃ©pondre.', trialTout), ...
         newline,newline,newline,newline,'Pour continuer, appuyez sur une touche'];
 end
 DrawFormattedText(windowPtr,msgs{1},'center', 'center', 255);
@@ -91,7 +91,7 @@ Screen('Flip', windowPtr);
 [secs, keyCode, deltaSecs] = KbWait([], 2); % Press any key to continue to next screen
 
 if inEnglish
-    msgs{2} = ['It is therefore important that you are quick and precise, since', ...
+    msgs{2} = ['It is therefore important that you are quick and precise, since ', ...
         sprintf('if there is an error, you will have to start over at %d.', startCount),newline,newline,newline,newline, ...
         'Press any key to start'];
 else
@@ -136,7 +136,7 @@ else
 end
 DrawFormattedText(windowPtr,endMsg,'center', 'center', 255);
 if inEnglish
-    DrawFormattedText(windowPtr,['Best score : ' num2str(maxpartResp)],'center', yCenter+150, 255); % Show best value to screen
+    DrawFormattedText(windowPtr,['Best score: ' num2str(maxpartResp)],'center', yCenter+150, 255); % Show best value to screen
 else
     DrawFormattedText(windowPtr,['Meilleur score : ' num2str(maxpartResp)],'center', yCenter+150, 255); % Show best value to screen
 end
@@ -158,7 +158,7 @@ csvPath = fullfile(dataDir, sprintf('%s.csv', fileName));
 
 save(matPath, 'data'); 
 writetable(struct2table(data), excelPath);
-writetable(array2table(array2table([timestamps.',ntrialsStr4timestamps.'],'VariableNames',{'Timestamps','TrialNumber'})), csvPath);
+writetable(array2table([timestamps.',ntrialsStr4timestamps.'],'VariableNames',{'Timestamps','TrialNumber'}), csvPath);
 
 end
 
