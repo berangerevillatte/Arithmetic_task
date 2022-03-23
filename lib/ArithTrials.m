@@ -1,14 +1,16 @@
-function [data,escIsDown] = arithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract)
+function [data, escIsDown] = ArithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract)
 
 %% Keyboard
 KbName('UnifyKeyNames'); 
 %KbName PTB3 : In the case of labels such as “5”, which appears on two keys, the name “5” designates the “5” key on the numeric keypad and “5%” designates the QWERTY “5” key.
-possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('BackSpace'), KbName('DELETE'), KbName('1'),KbName('1!'), ... % delete to erase with Mac
+possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('DELETE'), KbName('1'),KbName('1!'), ... % delete to erase with Mac
     KbName('2'),KbName('2@'),KbName('3'),KbName('3#'),KbName('4'),KbName('4$'), ...
     KbName('5'),KbName('5%'),KbName('6'),KbName('6^'),KbName('7'),KbName('7&'), ...
     KbName('8'),KbName('8*'),KbName('9'),KbName('9('),KbName('0'),KbName('0)'),];
 keyList = zeros(256,1); %https://stackoverflow.com/questions/45961412/using-kbqueuecheck-to-continuously-check-for-device-input
 keyList(possibleKeys) = 1;
+
+
 %% Experiment loop
 try
 ListenChar(-1); % Allows concurrent use of ListenChar for character suppression, while at the same time using keyboard queues for character and key input.
@@ -37,7 +39,7 @@ while (~isTrialTout && ~enterIsDown && ~escIsDown) %loop to get keyboard string 
             case 'return'
                 enterIsDown = true; % ends the while loop and goes to feedback
                 KbQueueRelease();
-            case {'backspace', 'delete'} % delete
+            case {'delete'} % delete
                 if ~isempty(temp) % as in GetEchoString to erase numbers
                     temp = temp(1:length(temp)-1);
                 end              
@@ -66,7 +68,7 @@ while (~isTrialTout && ~enterIsDown && ~escIsDown) %loop to get keyboard string 
         end
     end
     %% Print timer on screen
-    printTimer(windowPtr,trialTimer,trialTout);
+    PrintTimer(windowPtr,trialTimer,trialTout);
     %% Print string number to screen
     output = [' ', 'Reponse : ', temp]; % as in GetEchoString
     Screen('TextSize', windowPtr, 50);
@@ -85,7 +87,7 @@ end
 goodAnsw = startCount - data(ntrials).Step*subtract;
 if isTrialTout % Ran out of time before giving answer
     data(ntrials+1).Step = 1; % Start from beginning
-    data(ntrials).Accuracy   = false;
+    data(ntrials).Accuracy = false;
     color=[250 10 10]; halfSizeDot =50;
     DrawFormattedText(windowPtr,'Temps ecoule !','center', yCenter-100, 255);        % Time out feedback on screen
 
@@ -115,18 +117,5 @@ catch ME
 end
 end 
 
-function ProgressBar = printTimer(windowPtr,trialTimer,trialTout)
-% Adds a progress bar showing the time left in the frame buffer of windowPtr
-%trialTimer is GetSecs - trialTini; were trialTini is the initial GetSecs
-%at each trial start
-%trialTout is maximum given time for a trial
-    rectColor = [256,0,0];
-    penWidth = 5;
-    rectW = 300;
-    rectH = 50;
-    rectWtime = round(rectW*(trialTimer/trialTout));
-    rectOutline = [0, 0, rectW, rectH];
-    rectProgress = [0, 0, rectWtime, rectH];
-    Screen('FrameRect', windowPtr, rectColor, rectOutline, penWidth);
-    Screen('FillRect', windowPtr, rectColor, rectProgress);
-end
+
+
