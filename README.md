@@ -1,7 +1,7 @@
 # Arithmetic_task
 
 # Authors 
-Bérangère Villatte <berangere.villatte@umontreal.ca> and Charlotte Bigras <charlotte.bigras@umontreal.ca>
+Bérangère Villatte <berangere.villatte@umontreal.ca> and Charlotte Bigras <charlotte.bigras@umontreal.ca> and Frederik Desaulniers <frederik.desaullniers@umontreal.ca> and Tomy Aumont <tomy.aumont@umontreal.ca>
 
 # Content 
 Arithmetic task developped for the PSY6976 course, Université de Montréal, 2020.

@@ -1,3 +1,4 @@
 *.mat
 *.xlsx
+.Rhistory
 *.DS_Store
