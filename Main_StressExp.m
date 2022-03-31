@@ -8,27 +8,28 @@ if isempty(subID)
 end
 
 possibleLang = {'fr','en'};
-lang = lower(input('Quelle est la langue ? [EN / FR (défaut)] : ', 's'));
+lang = f_Cmdl_Select_Item(possibleLang);
 if isempty(lang) || ~ismember(lang, possibleLang)
     lang = 'fr';
 end
 
-isNoise = input('Y a t''il une tâche de bruit? Oui=true (défaut); Non=false');
+% isNoise = input('Y a t''il une tâche de bruit? Oui=true (défaut); Non=false');
+enableNoiseTask = strcmp(AskYesNo('Y a t''il une tâche de bruit? (défaut=Oui)'), 'yes');
 
-questionText = {'Avez-vous ouvert LabRecorder ?';
-                'Si non, ouvrez-le maintenant.'};
+questionText = {'Avez-vous ouvert LabRecorder ?'; 'Si non, ouvrez-le maintenant.'};
 isOK = questdlg(questionText, 'Verification', 'Oui', 'Non', 'Oui');
 if strcmp(isOK, 'Non')
     return
 end
 
-%% Set the LabRecorder to defined experiment settings
-lr = tcpip('localhost', 22345);  % default port: 22345
+%% Set the LSL LabRecorder to defined experiment settings
+lsl_output_dir = fullfile(pwd, 'lsl_data');
+lr = tcpclient('localhost', 22345);  % default port: 22345
 fopen(lr);
 fprintf(lr, 'select all');
-fprintf(lr, ['filename {root:' pwd '\data}'...
+fprintf(lr, ['filename {root:' lsl_output_dir '}'...
             '{template:Subj-%p.xdf}' ...
-            '{Participant:JohnDoe}' ...
+            '{Participant:' subID '}' ...
             '{task:Arithmetic} ' ...
             '{Acquisition:ARP-Shimmer}' ...
             '{Session:1}' ...
@@ -52,7 +53,7 @@ stepTout = 7.5; % max time allocated per trial
 startCountTrain = 1158;
 trainTout = 30; % Train duration = 30 secs
 
-%Tsk constants
+%Task constants
 startCountTsk = 1022; % Usually 1022 (TSST) but too many participants have already done the Tsk before
 subtract = 13;
 tskTout = 6*60; % Tsk duration = 6 min
@@ -71,7 +72,7 @@ InstList = ["Inst_General", "Inst_MentalTrain", ...
     "Inst_Rest_PreNoiseTsk", "Inst_NoiseTsk", "Inst_Rest_PreMentalTsk", ...
     "Inst_MentalTsk", "Inst_Rest_PreEndTsk"];
 
-if ~isNoise
+if ~enableNoiseTask
     Tsk2rm = ["Rest_PreNoiseTsk", "NoiseTsk"];
     Inst2rm = ["Inst_Rest_PreNoiseTsk", "Inst_NoiseTsk"];
     TskList = TskList(~contains(TskList, Tsk2rm));
@@ -83,14 +84,13 @@ i=1;
 j=1;
 k=1;
 expTini = GetSecs; 
-fprintf(lr, 'start');  % TODO: A placer au debut de la tache apres les instruciton principales
+fprintf(lr, 'start');  % TODO: A placer au debut de la tache apres les instruction principales
 while ~isExpOver
     % General instructions (no timer)
-    
     Screen('TextSize', windowPtr, 30);
     
-    giNList = [3,4,5];
-    if isNoise, giNList(1) = 11; end %general instructions to display on screen
+    giNList = [3, 4, 5];
+    if enableNoiseTask, giNList(1) = 11; end %general instructions to display on screen
     
     for giN = giNList
         DrawFormattedText(windowPtr, ShowInstruct(giN), 'center', 'center', 255); % general instructions #1
@@ -148,7 +148,7 @@ while ~isExpOver
         elseif isArith
             [InstMkr, TskMkr, EndMkr, tskresults] = ArithmeticTask(windowPtr, startCount, subtract, TimeOut, stepTout, instructDur, xCenter, yCenter, subID);
         
-        elseif isNoise
+        elseif enableNoiseTask
             [InstMkr, TskMkr, EndMkr] = NoiseTask(instructDur, TimeOut, windowPtr, iN);
 
         end
@@ -189,10 +189,10 @@ while ~isExpOver
     Screen('Flip', windowPtr);
     [secs, keyCode] = KbWait([], 2);
     
-    isExpOver = true;
+    isExpOver = strcmp(AskYesNo('Voulez-vous terminer la tache?'), 'yes');
 end
 sca
-fprintf(lr, 'stop');  % TODO: Verifier que c'est bine ici la fin de l'enregistrement
+fprintf(lr, 'stop');  % TODO: Verifier que c'est bien ici la fin de l'enregistrement
 
 %% save Time Markers
 
