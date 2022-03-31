@@ -15,6 +15,27 @@ end
 
 isNoise = input('Y a t''il une tâche de bruit? Oui=true (défaut); Non=false');
 
+questionText = {'Avez-vous ouvert LabRecorder ?';
+                'Si non, ouvrez-le maintenant.'};
+isOK = questdlg(questionText, 'Verification', 'Oui', 'Non', 'Oui');
+if strcmp(isOK, 'Non')
+    return
+end
+
+%% Set the LabRecorder to defined experiment settings
+lr = tcpip('localhost', 22345);  % default port: 22345
+fopen(lr);
+fprintf(lr, 'select all');
+fprintf(lr, ['filename {root:' pwd '\data}'...
+            '{template:Subj-%p.xdf}' ...
+            '{Participant:JohnDoe}' ...
+            '{task:Arithmetic} ' ...
+            '{Acquisition:ARP-Shimmer}' ...
+            '{Session:1}' ...
+            '{run:1}' ...
+            '{modality:Audio-ECG-GSR}']); 
+
+
 %% Initialize screens and keyboards
 [windowPtr, rect, xCenter, yCenter] = InitializePTB([0 0 0]);
 
@@ -22,9 +43,9 @@ isNoise = input('Y a t''il une tâche de bruit? Oui=true (défaut); Non=false');
 actionKeys = GetAvailableKbKeys();
 
 %% Define constants for Train and Task
-instructDur = 10; %30
-restDur = 10; %6*60
-noiseDur = 1*60+2;
+instructDur = 3; %30
+restDur = 3; %6*60
+noiseDur = 5*60+2;
 stepTout = 7.5; % max time allocated per trial
 
 %Train constants
@@ -34,7 +55,7 @@ trainTout = 30; % Train duration = 30 secs
 %Tsk constants
 startCountTsk = 1022; % Usually 1022 (TSST) but too many participants have already done the Tsk before
 subtract = 13;
-tskTout = 5*60; % Tsk duration = 5 min
+tskTout = 6*60; % Tsk duration = 6 min
 
 % initialize some values
 isExpOver = false;
@@ -62,6 +83,7 @@ i=1;
 j=1;
 k=1;
 expTini = GetSecs; 
+fprintf(lr, 'start');  % TODO: A placer au debut de la tache apres les instruciton principales
 while ~isExpOver
     % General instructions (no timer)
     
@@ -165,11 +187,12 @@ while ~isExpOver
    
     DrawFormattedText(windowPtr, ShowInstruct(9), 'center', 'center', 255); % general instructions #3 ask for questions 
     Screen('Flip', windowPtr);
-    KbWait([], 2);
+    [secs, keyCode] = KbWait([], 2);
     
     isExpOver = true;
 end
 sca
+fprintf(lr, 'stop');  % TODO: Verifier que c'est bine ici la fin de l'enregistrement
 
 %% save Time Markers
 
