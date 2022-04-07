@@ -1,53 +1,14 @@
 clear all
 addpath('lib')
 
-%% Ask for subject code and language
-subID = input('Entrez le code du participant : ','s');
-if isempty(subID)
-  subID = 'test';
-end
+f_SaveCommandWindow
 
-possibleLang = {'fr','en'};
-lang = f_Cmdl_Select_Item(possibleLang);
-if isempty(lang) || ~ismember(lang, possibleLang)
-    lang = 'fr';
-end
-
-% isNoise = input('Y a t''il une tâche de bruit? Oui=true (défaut); Non=false');
-enableNoiseTask = strcmp(AskYesNo('Y a t''il une tâche de bruit? (défaut=Oui)'), 'yes');
-
-questionText = {'Avez-vous ouvert LabRecorder ?'; 'Si non, ouvrez-le maintenant.'};
-isOK = questdlg(questionText, 'Verification', 'Oui', 'Non', 'Oui');
-if strcmp(isOK, 'Non')
-    return
-end
-
-%% Set the LSL LabRecorder to defined experiment settings
-lsl_output_dir = fullfile(pwd, 'lsl_data');
-lr = tcpclient('localhost', 22345);  % default port: 22345
-fopen(lr);
-fprintf(lr, 'select all');
-fprintf(lr, ['filename {root:' lsl_output_dir '}'...
-            '{template:Subj-%p.xdf}' ...
-            '{Participant:' subID '}' ...
-            '{task:Arithmetic} ' ...
-            '{Acquisition:ARP-Shimmer}' ...
-            '{Session:1}' ...
-            '{run:1}' ...
-            '{modality:Audio-ECG-GSR}']); 
-
-
-%% Initialize screens and keyboards
-[windowPtr, rect, xCenter, yCenter] = InitializePTB([0 0 0]);
-
-%% Initialize infos for numeric scale
-actionKeys = GetAvailableKbKeys();
 
 %% Define constants for Train and Task
-instructDur = 3; %30
-restDur = 3; %6*60
-noiseDur = 5*60+2;
-stepTout = 7.5; % max time allocated per trial
+instructDur = 3; %30 [seconds]
+restDur = 3; %6*60 [seconds]
+noiseDur = 5*60+2; % [seconds]
+stepTout = 7.5; % max time allocated per trial [seconds]
 
 %Train constants
 startCountTrain = 1158;
@@ -59,7 +20,57 @@ subtract = 13;
 tskTout = 6*60; % Tsk duration = 6 min
 
 % initialize some values
-isExpOver = false;
+wantToQuit = false;
+
+
+%% Ask for subject code and language
+subID = input('Entrez le code du participant : ','s');
+if isempty(subID)
+  subID = 'test';
+end
+
+possibleLang = {'fr','en'};
+[~, lang] = f_Cmdl_Select_Item(possibleLang);
+if isempty(lang) || ~ismember(lang, possibleLang)
+    lang = 'fr';
+end
+
+% isNoise = input('Y a t''il une tâche de bruit? Oui=true (défaut); Non=false');
+enableNoiseTask = strcmp(AskYesNo('Y a t''il une tâche de bruit? (défaut=Oui)'), 'yes');
+
+enable_lsl = strcmp(AskYesNo('Voulez-vous activer LSL?'), 'yes');
+
+if enable_lsl
+    questionText = {'Avez-vous ouvert LabRecorder ?';
+                    'Si non, ouvrez-le maintenant.'; '';
+                    'Appuyez-sur ''non'' fermera le programme'};
+    isOK = questdlg(questionText, 'Verification', 'Oui', 'Non', 'Oui');
+    if isempty(isOK) || strcmp(isOK, 'Non')
+        return
+    end
+    
+    %% Set the LSL LabRecorder to defined experiment settings
+    lsl_output_dir = fullfile(pwd, 'lsl_data');
+    lr = tcpclient('localhost', 22345);  % default port: 22345
+    fopen(lr);
+    fprintf(lr, 'select all');
+    fprintf(lr, ['filename {root:' lsl_output_dir '}'...
+                '{template:Subj-%p.xdf}' ...
+                '{Participant:' subID '}' ...
+                '{task:Arithmetic} ' ...
+                '{Acquisition:ARP-Shimmer}' ...
+                '{Session:1}' ...
+                '{run:1}' ...
+                '{modality:Audio-ECG-GSR}']); 
+end
+
+
+%% Initialize screens and keyboards
+[windowPtr, rect, xCenter, yCenter] = InitializePTB([0 0 0]);
+
+
+%% Initialize infos for numeric scale
+actionKeys = GetAvailableKbKeys();
 
 % import audio file
 [y, fs] = audioread('birds.wav');
@@ -83,9 +94,12 @@ end
 i=1;
 j=1;
 k=1;
-expTini = GetSecs; 
-fprintf(lr, 'start');  % TODO: A placer au debut de la tache apres les instruction principales
-while ~isExpOver
+disp(datestr(now,'yyyy-mm-dd HH:MM:SS.FFF'))
+expTini = GetSecs;
+disp(['timestamps: expTini=' num2str(expTini, '%.6f')])
+
+if enable_lsl, fprintf(lr, 'start'); end  % TODO: A placer au debut de la tache apres les instruction principales
+while ~wantToQuit
     % General instructions (no timer)
     Screen('TextSize', windowPtr, 30);
     
@@ -143,13 +157,23 @@ while ~isExpOver
         
         if isRest
             [InstMkr, TskMkr, EndMkr] = RestPeriod(windowPtr, instructDur, TimeOut);
+            disp(['timestamps: Rest | InstMkr=' num2str(InstMkr, '%.6f')])
+            disp(['timestamps: Rest | TskMkr=' num2str(TskMkr, '%.6f')])
+            disp(['timestamps: Rest | EndMkr=' num2str(EndMkr, '%.6f')])
             sound(y, fs); % bird signal for the end of rest period
 
         elseif isArith
             [InstMkr, TskMkr, EndMkr, tskresults] = ArithmeticTask(windowPtr, startCount, subtract, TimeOut, stepTout, instructDur, xCenter, yCenter, subID);
-        
+            disp(['timestamps: Arith | InstMkr=' num2str(InstMkr, '%.6f')])
+            disp(['timestamps: Arith | TskMkr=' num2str(TskMkr, '%.6f')])
+            disp(['timestamps: Arith | EndMkr=' num2str(EndMkr, '%.6f')])
+            disp(['timestamps: Arith | tskresults=' num2str(tskresults, '%.6f')])
+
         elseif enableNoiseTask
             [InstMkr, TskMkr, EndMkr] = NoiseTask(instructDur, TimeOut, windowPtr, iN);
+            disp(['timestamps: Noise | InstMkr=' num2str(InstMkr, '%.6f')])
+            disp(['timestamps: Noise | TskMkr=' num2str(TskMkr, '%.6f')])
+            disp(['timestamps: Noise | EndMkr=' num2str(EndMkr, '%.6f')])
 
         end
         
@@ -189,10 +213,10 @@ while ~isExpOver
     Screen('Flip', windowPtr);
     [secs, keyCode] = KbWait([], 2);
     
-    isExpOver = strcmp(AskYesNo('Voulez-vous terminer la tache?'), 'yes');
+    wantToQuit = strcmp(AskYesNo('Voulez-vous terminer la tache?'), 'yes');
 end
 sca
-fprintf(lr, 'stop');  % TODO: Verifier que c'est bien ici la fin de l'enregistrement
+if enable_lsl, fprintf(lr, 'stop'); end  % TODO: Verifier que c'est bien ici la fin de l'enregistrement
 
 %% save Time Markers
 
@@ -210,4 +234,4 @@ matPath = fullfile(dataDir,sprintf('%s_data_%s.mat', subID, ...
     datestr(now,'yyyymmdd')));
 save(matPath, 'data');
 
-
+diary off % Stop recording command window
