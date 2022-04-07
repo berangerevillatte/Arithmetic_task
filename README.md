@@ -19,8 +19,10 @@ negative feedback if an error is made or if time is up
 # Prerequisites
 Before starting the task, you must 
 1. Enter participant code
-2. Indicate whether the user is using a Mac operating system (yes or no)
-3. Select the duration of the task (set to 300 sec (5min) by default).
+2. (deprecated) Indicate whether the user is using a Mac operating system (yes or no)
+3. Select the language of the task.
+4. Determine if there will be a noise task or not.
+5. Select the duration of the task (set to 300 sec (5min) by default).
 
 The default values of the main variables are as follows, but can be changed:
 startCount = 1022; % Starting number for arithmetic task
