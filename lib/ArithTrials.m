@@ -1,5 +1,8 @@
 function [data, escIsDown] = ArithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract)
 
+% TODO: Check if can remove the KbQueueRelease() ???
+
+
 %% Keyboard
 KbName('UnifyKeyNames'); 
 %KbName PTB3 : In the case of labels such as “5”, which appears on two keys, the name “5” designates the “5” key on the numeric keypad and “5%” designates the QWERTY “5” key.

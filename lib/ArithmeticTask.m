@@ -1,5 +1,5 @@
 
-function[InstrMkr, TskMkr, EndMkr, data] = ArithmeticTask(windowPtr, startCount, subtract, taskTout, stepTout, instTout, xCenter, yCenter, subID)
+function [InstrMkr, TskMkr, EndMkr, data, wantToQuit] = ArithmeticTask(windowPtr, startCount, subtract, taskTout, stepTout, instTout, xCenter, yCenter, subID, lang, quitKeyCode)
 
 % duree tache, 1er nombre, subtract, 1er nombre aleatoire a chaque step =0, duree instructions
     %% Silent arithmetic task developped to induce acute stress for psychophysiological assessement, suitable for EEG, MEG or ARP
@@ -7,7 +7,7 @@ function[InstrMkr, TskMkr, EndMkr, data] = ArithmeticTask(windowPtr, startCount,
     % authors : Berangere Villatte <berangere.villatte@umontreal.ca>, Charlotte
     % Bigras <charlotte.bigras@umontreal.ca> & Frederik Desaulniers <frederik.desaulniers@umontreal.ca>
 
-    
+
     %% MENTAL_TSK instructions
     % instructions are timed : 1 min
     Screen('TextSize', windowPtr, 30);
@@ -21,28 +21,42 @@ function[InstrMkr, TskMkr, EndMkr, data] = ArithmeticTask(windowPtr, startCount,
     timer = 0;
     timerTini = GetSecs(); % Initialize time for each trials   
     InstrMkr = GetSecs;
+    TskMkr = [];
+    EndMkr = [];
+    data = [];
+    wantToQuit = false;
 
     while ~isInstTout % 1 minute
         while ~isMentalTxtTout
-            DrawFormattedText(windowPtr, ShowInstruct(1, startCount, subtract, stepTout), 'center', 'center', 255); % specific instructions for rest period 1
+            DrawFormattedText(windowPtr, ShowInstruct(lang, 1, startCount, subtract, stepTout), 'center', 'center', 255); % specific instructions for rest period 1
             Screen('Flip', windowPtr);
             
             %check if time is over
             timer = GetSecs - timerTini;        
             if (timer >= mentalTxtTout), isMentalTxtTout = true; end            
             
+            if QuitRequested(quitKeyCode)
+                wantToQuit = true;
+                return
+            end
+
         end
         
         rectColor = [107, 161, 255];
         PrintTimer(windowPtr, timer, instTout, rectColor)
         
-        DrawFormattedText(windowPtr, ShowInstruct(2, startCount, subtract, stepTout), 'center', 'center', 255); % specific instructions for rest period 1
+        DrawFormattedText(windowPtr, ShowInstruct(lang, 2, startCount, subtract, stepTout), 'center', 'center', 255); % specific instructions for rest period 1
         Screen('Flip', windowPtr);        
         
         %check if time is over
         timer = GetSecs() - timerTini;        
         if (timer >= instTout), isInstTout = true; end   
         
+        if QuitRequested(quitKeyCode)
+            wantToQuit = true;
+            EndMkr = GetSecs;
+            return
+        end
     end
     
 
@@ -60,15 +74,21 @@ function[InstrMkr, TskMkr, EndMkr, data] = ArithmeticTask(windowPtr, startCount,
     TskMkr = GetSecs;
 
     %% Experiment loop
-    while ~isTaskTout && ~escIsDown % Experiment loop
+    while ~isTaskTout && ~wantToQuit % Experiment loop
         ntrials = ntrials +1;
         data(ntrials).realTime = GetSecs;
         data(ntrials).elTime = data(ntrials).realTime - GetSecs;
-        [data, escIsDown] = ArithTrials(data, windowPtr, xCenter, yCenter, ntrials, stepTout, startCount, subtract);
+        [data, wantToQuit] = ArithTrials(data, windowPtr, xCenter, yCenter, ntrials, stepTout, startCount, subtract);
         
         %% Update Timer, check if task time is up    
         taskTimer = GetSecs - taskIni; % Update timer, check if time is up
         if (taskTimer >= taskTout), isTaskTout = true; end
+        
+        if wantToQuit || QuitRequested(quitKeyCode)
+            wantToQuit = true;
+            EndMkr = GetSecs;
+            return
+        end
     end
         
     EndMkr = GetSecs;
