@@ -69,21 +69,23 @@ while (~isTrialTout && ~enterIsDown && ~escIsDown) %loop to get keyboard string 
     end
     %% Print timer on screen
     PrintTimer(windowPtr,trialTimer,trialTout);
+
     %% Print string number to screen
     output = [' ', 'Reponse : ', temp]; % as in GetEchoString
     Screen('TextSize', windowPtr, 50);
     DrawFormattedText(windowPtr, output, 'center', 'center', 255);
 
-   if data(ntrials).Step == 1 %% Print starting equation
-    DrawFormattedText(windowPtr,startEquation,'center', (yCenter-50), 255);
-   end
+    if data(ntrials).Step == 1 %% Print starting equation
+        DrawFormattedText(windowPtr,startEquation,'center', (yCenter-50), 255);
+    end
     Screen('Flip', windowPtr, [], []);
 
     trialTimer = GetSecs() - trialTini; % Update timer, check if time is up
     if (trialTimer >= trialTout), isTrialTout = true; end
 end
 
-%% Evaluate participant's response      
+%% Evaluate participant's response
+disp(['Reponse: ', temp])
 goodAnsw = startCount - data(ntrials).Step*subtract;
 if isTrialTout % Ran out of time before giving answer
     data(ntrials+1).Step = 1; % Start from beginning

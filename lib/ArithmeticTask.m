@@ -60,16 +60,16 @@ function[InstrMkr, TskMkr, EndMkr, data] = ArithmeticTask(windowPtr, startCount,
     TskMkr = GetSecs;
 
     %% Experiment loop
-        while ~isTaskTout && ~escIsDown % Experiment loop
-            ntrials = ntrials +1;
-            data(ntrials).realTime = GetSecs;
-            data(ntrials).elTime = data(ntrials).realTime - GetSecs;
-            [data, escIsDown] = ArithTrials(data, windowPtr, xCenter, yCenter, ntrials, stepTout, startCount, subtract);
-            
-            %% Update Timer, check if task time is up    
-            taskTimer = GetSecs - taskIni; % Update timer, check if time is up
-            if (taskTimer >= taskTout), isTaskTout = true; end
-        end
+    while ~isTaskTout && ~escIsDown % Experiment loop
+        ntrials = ntrials +1;
+        data(ntrials).realTime = GetSecs;
+        data(ntrials).elTime = data(ntrials).realTime - GetSecs;
+        [data, escIsDown] = ArithTrials(data, windowPtr, xCenter, yCenter, ntrials, stepTout, startCount, subtract);
+        
+        %% Update Timer, check if task time is up    
+        taskTimer = GetSecs - taskIni; % Update timer, check if time is up
+        if (taskTimer >= taskTout), isTaskTout = true; end
+    end
         
     EndMkr = GetSecs;
     

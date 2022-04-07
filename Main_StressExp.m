@@ -167,7 +167,7 @@ while ~wantToQuit
             disp(['timestamps: Arith | InstMkr=' num2str(InstMkr, '%.6f')])
             disp(['timestamps: Arith | TskMkr=' num2str(TskMkr, '%.6f')])
             disp(['timestamps: Arith | EndMkr=' num2str(EndMkr, '%.6f')])
-            disp(['timestamps: Arith | tskresults=' num2str(tskresults, '%.6f')])
+%             disp(['timestamps: Arith | tskresults=' num2str(tskresults, '%.6f')])
 
         elseif enableNoiseTask
             [InstMkr, TskMkr, EndMkr] = NoiseTask(instructDur, TimeOut, windowPtr, iN);
