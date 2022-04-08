@@ -1,5 +1,8 @@
 *.asv
 *.mat
 *.xlsx
-.Rhistory
+*.zip
 *.DS_Store
+.Rhistory
+
+log_files/*
