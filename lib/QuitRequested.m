@@ -37,7 +37,7 @@ function quitFlag = QuitRequested(targetKeyCode)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-[~,~, keyCode] = KbCheck;
+[~,~, keyCode] = KbCheck();
 quitFlag = keyCode(targetKeyCode);
 if quitFlag
     % Wait release of key before continuing

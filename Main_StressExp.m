@@ -1,5 +1,5 @@
 clear all
-addpath('lib')
+addpath('lib', 'resource')
 
 f_SaveCommandWindow
 

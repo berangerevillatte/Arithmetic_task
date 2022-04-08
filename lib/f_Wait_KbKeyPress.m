@@ -38,7 +38,7 @@ function secs = f_Wait_KbKeyPress(targetKey)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 while 1
-    [~, secs, keyCode] = KbCheck;
+    [~, secs, keyCode] = KbCheck();
     if any(keyCode(targetKey))
         break
     end
