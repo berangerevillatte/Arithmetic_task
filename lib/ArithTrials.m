@@ -1,9 +1,12 @@
 function [data, escIsDown] = ArithTrials(data, windowPtr, xCenter, yCenter, ntrials, trialTout, startCount, subtract)
 
+% TODO: Check if can remove the KbQueueRelease() ???
+
+
 %% Keyboard
 KbName('UnifyKeyNames'); 
-%KbName PTB3 : In the case of labels such as “5”, which appears on two keys, the name “5” designates the “5” key on the numeric keypad and “5%” designates the QWERTY “5” key.
-possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('DELETE'), KbName('1'),KbName('1!'), ... % delete to erase with Mac
+%KbName PTB3 : In the case of labels such as “5�?, which appears on two keys, the name “5�? designates the “5�? key on the numeric keypad and “5%�? designates the QWERTY “5�? key.
+possibleKeys = [KbName('ESCAPE'),KbName('RETURN'), KbName('DELETE'), KbName('BACKSPACE'), KbName('1'),KbName('1!'), ... % delete to erase with Mac
     KbName('2'),KbName('2@'),KbName('3'),KbName('3#'),KbName('4'),KbName('4$'), ...
     KbName('5'),KbName('5%'),KbName('6'),KbName('6^'),KbName('7'),KbName('7&'), ...
     KbName('8'),KbName('8*'),KbName('9'),KbName('9('),KbName('0'),KbName('0)'),];
@@ -42,7 +45,11 @@ while (~isTrialTout && ~enterIsDown && ~escIsDown) %loop to get keyboard string 
             case {'delete'} % delete
                 if ~isempty(temp) % as in GetEchoString to erase numbers
                     temp = temp(1:length(temp)-1);
-                end              
+                end  
+            case {'backspace'} %delete
+                if ~isempty(temp) % as in GetEchoString to erase numbers
+                    temp = temp(1:length(temp)-1);
+                end  
             case {'1', '1!'}
                 temp = [temp '1'];
             case {'2', '2@'}
@@ -69,21 +76,23 @@ while (~isTrialTout && ~enterIsDown && ~escIsDown) %loop to get keyboard string 
     end
     %% Print timer on screen
     PrintTimer(windowPtr,trialTimer,trialTout);
+
     %% Print string number to screen
     output = [' ', 'Reponse : ', temp]; % as in GetEchoString
     Screen('TextSize', windowPtr, 50);
     DrawFormattedText(windowPtr, output, 'center', 'center', 255);
 
-   if data(ntrials).Step == 1 %% Print starting equation
-    DrawFormattedText(windowPtr,startEquation,'center', (yCenter-50), 255);
-   end
+    if data(ntrials).Step == 1 %% Print starting equation
+        DrawFormattedText(windowPtr,startEquation,'center', (yCenter-50), 255);
+    end
     Screen('Flip', windowPtr, [], []);
 
     trialTimer = GetSecs() - trialTini; % Update timer, check if time is up
     if (trialTimer >= trialTout), isTrialTout = true; end
 end
 
-%% Evaluate participant's response      
+%% Evaluate participant's response
+disp(['Reponse: ', temp])
 goodAnsw = startCount - data(ntrials).Step*subtract;
 if isTrialTout % Ran out of time before giving answer
     data(ntrials+1).Step = 1; % Start from beginning

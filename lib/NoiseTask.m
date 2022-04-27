@@ -1,4 +1,4 @@
-function [InstMkr, TskMkr, EndMkr] = NoiseTask(instructDur, noiseDur, windowPtr, iN)
+function [InstMkr, TskMkr, EndMkr, wantToQuit] = NoiseTask(instructDur, noiseDur, windowPtr, iN, lang, quitKeyCode)
 
     %default:   Instructions = 30s
     %           Rest = 6*60s
@@ -18,11 +18,14 @@ function [InstMkr, TskMkr, EndMkr] = NoiseTask(instructDur, noiseDur, windowPtr,
 
     timer = 0;
     noiseTini = GetSecs; % Initialize time for each trials
-    InstMkr = noiseTini; 
+    InstMkr = noiseTini;
+    TskMkr = [];
+    EndMkr = [];
+    wantToQuit = false;
     
     while ~isInstrucTout  
         
-        DrawFormattedText(windowPtr, ShowInstruct(iN), 'center', 'center', 255); % specific instructions for rest period 1
+        DrawFormattedText(windowPtr, ShowInstruct(lang, iN), 'center', 'center', 255); % specific instructions for rest period 1
         Screen('Flip', windowPtr);
         
         %print timer
@@ -30,17 +33,29 @@ function [InstMkr, TskMkr, EndMkr] = NoiseTask(instructDur, noiseDur, windowPtr,
         PrintTimer(windowPtr, timer, instructDur, rectColor)
             
         timer = GetSecs() - noiseTini;  %check if time is over    
-        if (timer >= instructDur), isInstrucTout = true; end   
+        if (timer >= instructDur), isInstrucTout = true; end
+
+        if QuitRequested(quitKeyCode)
+            wantToQuit = true;
+            EndMkr = GetSecs;
+            return
+        end
     end
     TskMkr = GetSecs;
     
     while ~isNoiseTout
         iN = 8;
-        DrawFormattedText(windowPtr, ShowInstruct(iN), 'center', 'center', 255); % specific instructions for rest period 1
+        DrawFormattedText(windowPtr, ShowInstruct(lang, iN), 'center', 'center', 255); % specific instructions for rest period 1
         Screen('Flip', windowPtr);
         
         timer = GetSecs() - noiseTini;  %check if time is over 
         if (timer >= instructDur+noiseDur), isNoiseTout = true; end
+
+        if QuitRequested(quitKeyCode)
+            wantToQuit = true;
+            EndMkr = GetSecs;
+            return
+        end
     end   
     EndMkr = GetSecs;
     
