@@ -43,4 +43,3 @@ if quitFlag
     % Wait release of key before continuing
     KbWait([], 1, []);
 end
-

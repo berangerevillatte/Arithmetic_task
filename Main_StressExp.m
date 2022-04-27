@@ -1,5 +1,33 @@
 clear all
-addpath('lib')
+addpath('lib', 'resource')
+
+f_SaveCommandWindow
+
+%% Lists of tasks and instructions.
+% Every task must have a corresponding instruction in the same order.
+% The general instruction is automatically added at the begining of the instruction array after the
+% task selection for this run.
+TskList = ["MentalTrain", "Rest_PreNoiseTsk", "NoiseTsk",...
+           "Rest_PreMentalTsk", "MentalTsk", "Rest_PreEndTsk"];
+
+InstList = ["Inst_MentalTrain", "Inst_Rest_PreNoiseTsk", "Inst_NoiseTsk", ...
+            "Inst_Rest_PreMentalTsk", "Inst_MentalTsk", "Inst_Rest_PreEndTsk"];
+
+%% Define constants for Train and Task
+instructDur = 3; %30 [seconds]
+restDur = 3; %6*60 [seconds]
+noiseDur = 5*60+2; % [seconds]
+stepTout = 7.5; % max time allocated per trial [seconds]
+
+%Train constants
+startCountTrain = 1158;
+trainTout = 30; % Train duration = 30 secs
+
+%Task constants
+startCountTsk = 1022; % Usually 1022 (TSST) but too many participants have already done the Tsk
+subtract = 13;
+tskTout = 6*60; % Tsk duration = 6 min
+
 
 f_SaveCommandWindow
 

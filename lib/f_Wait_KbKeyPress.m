@@ -46,4 +46,3 @@ end
 
 %Wait release of key before continuing
 KbWait([], 1, []);
-
